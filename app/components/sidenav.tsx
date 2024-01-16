@@ -5,7 +5,7 @@ export default function SideNav() {
         <div className="flex flex-col bg-blue-500 shadow-inner py-4 md:h-full md:px-2">
             <div className="flex flex-col">
                 <Link 
-                className="flex my-2 justify-center p-4 hover:bg-blue-300 rounded-xl"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
                 href="/"
                 >
                     <div className="text-lg text-white">
@@ -13,7 +13,7 @@ export default function SideNav() {
                     </div>
                 </Link>
                 <Link 
-                className="flex my-2 justify-center p-4 hover:bg-blue-300 rounded-xl"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
                 href="/"
                 >
                     <div className="text-lg text-white">
@@ -21,7 +21,7 @@ export default function SideNav() {
                     </div>
                 </Link>
                 <Link 
-                className="flex my-2 justify-center p-4 hover:bg-blue-300 rounded-xl"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
                 href="/"
                 >
                     <div className="text-lg text-white">
@@ -29,7 +29,7 @@ export default function SideNav() {
                     </div>
                 </Link>
                 <Link 
-                className="flex my-2 justify-center p-4 hover:bg-blue-300 rounded-xl"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
                 href="/"
                 >
                     <div className="text-lg text-white">
@@ -37,7 +37,7 @@ export default function SideNav() {
                     </div>
                 </Link>
                 <Link 
-                className="flex my-2 justify-center p-4 hover:bg-blue-300 rounded-xl"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
                 href="/"
                 >
                     <div className="text-lg text-white">
