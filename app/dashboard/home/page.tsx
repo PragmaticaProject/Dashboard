@@ -1,3 +1,7 @@
+import ActivitiesList from "@/app/components/data/activitiesList"
+
 export default function Page() {
-    return <h1>Hello World!</h1>
+    return (
+        <ActivitiesList />
+    )
 }
