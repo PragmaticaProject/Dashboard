@@ -17,7 +17,8 @@ export default function ActivitiesList() {
         try {
             const user = auth.currentUser;
             if (user) {
-                const snapshot = await get(child(dbRef, `pilot/users/${user.uid}`));
+              //const snapshot = await get(child(dbRef, `pilot/users/${user.uid}`));
+              const snapshot = await get(child(dbRef, `pilot/users/7TgDiZLWHdSBi9qhtqeImsj35c73`));
                 
                 if (snapshot.exists()) {
                     console.log("snapshot found.");
@@ -35,7 +36,7 @@ export default function ActivitiesList() {
     };
 
     fetchData();
-  }, [auth.currentUser, dbRef]);
+  }, []);
 
   return (
     <div className="mx-auto max-w-lg">

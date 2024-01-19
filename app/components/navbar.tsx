@@ -23,7 +23,7 @@ export default function NavBar() {
                 href="/"
                 >
                     <div className="text-md text-black">
-                        <h1>Clients</h1>
+                        <h1>Users</h1>
                     </div>
                 </Link>
                 <Link 

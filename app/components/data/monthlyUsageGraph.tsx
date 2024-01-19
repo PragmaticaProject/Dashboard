@@ -19,7 +19,8 @@ export default function MonthlyUsageGraph() {
             try {
                 const user = firebaseAuth.currentUser;
                 if (user) {
-                    const snapshot = await get(child(ref(database), `pilot/users/${user.uid}/sessions`));
+                    //const snapshot = await get(child(ref(database), `pilot/users/${user.uid}/sessions`));
+                    const snapshot = await get(child(ref(database), `pilot/users/7TgDiZLWHdSBi9qhtqeImsj35c73/sessions`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
@@ -82,7 +83,7 @@ export default function MonthlyUsageGraph() {
         };
 
         fetchData();
-    });
+    }, []);
 
     return (
         <div>
