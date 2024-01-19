@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
@@ -14,7 +14,7 @@ interface ChartData {
 
 export default function Page() {
     const activityName = useSearchParams().get('activityName');
-    const [chartData, setChartData] = useState<ChartData[]>([]);
+    var chartData = null;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,8 +73,7 @@ export default function Page() {
                             });
                         });
 
-                        // Set the newData array as the chartData state
-                        setChartData(newData);
+                        chartData = newData;
                     } else {
                         console.log("No data available");
                     }
@@ -96,8 +95,12 @@ export default function Page() {
             <div className="text-xl font-bold text-center">
                 <h1>{activityName}</h1>
             </div>
-            {chartData.length > 0 && <ActivityGraph chartData={chartData} />}
-            {chartData.length > 0 && <ActivityTable chartData={chartData} />}
+            {chartData && (
+                <div>
+                    <ActivityGraph chartData={chartData} />
+                    <ActivityTable chartData={chartData} />
+                </div>
+            )}
         </div>
     );
 };

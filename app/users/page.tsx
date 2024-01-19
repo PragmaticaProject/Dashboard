@@ -1,7 +1,5 @@
-import ActivitiesList from "@/app/components/data/activitiesList";
-
 export default function Page() {
     return (
-        <ActivitiesList />
+        <h1>Users List</h1>
     )
 }
