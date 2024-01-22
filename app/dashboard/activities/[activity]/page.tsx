@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+"use client";
+
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
@@ -14,15 +16,15 @@ interface ChartData {
 
 export default function Page() {
     const activityName = useSearchParams().get('activityName');
-    var chartData = null;
+    const [chartData, setChartData] = useState<ChartData[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const user = firebaseAuth.currentUser;
                 if (user) {
-                    //const snapshot = await get(child(ref(database), `pilot/users/${user.uid}/sessions`));
-                    const snapshot = await get(child(ref(database), `pilot/users/7TgDiZLWHdSBi9qhtqeImsj35c73/sessions`));
+                    const snapshot = await get(child(ref(database), `pilot/users/${user.uid}/sessions`));
+                    //const snapshot = await get(child(ref(database), `pilot/users/7TgDiZLWHdSBi9qhtqeImsj35c73/sessions`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
@@ -73,7 +75,8 @@ export default function Page() {
                             });
                         });
 
-                        chartData = newData;
+                        // Set the newData array as the chartData state
+                        setChartData(newData);
                     } else {
                         console.log("No data available");
                     }
@@ -95,12 +98,8 @@ export default function Page() {
             <div className="text-xl font-bold text-center">
                 <h1>{activityName}</h1>
             </div>
-            {chartData && (
-                <div>
-                    <ActivityGraph chartData={chartData} />
-                    <ActivityTable chartData={chartData} />
-                </div>
-            )}
+            {chartData.length > 0 && <ActivityGraph chartData={chartData} />}
+            {chartData.length > 0 && <ActivityTable chartData={chartData} />}
         </div>
     );
 };

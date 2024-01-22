@@ -25,7 +25,7 @@ export default function SideNav() {
                 href="/dashboard/activities/"
                 >
                     <div className="text-lg text-white">
-                        <h1>Activities</h1>
+                        <h1>Assigned Activities</h1>
                     </div>
                 </Link>
                 <Link 
@@ -33,7 +33,7 @@ export default function SideNav() {
                 href="/"
                 >
                     <div className="text-lg text-white">
-                        <h1>Targets</h1>
+                        <h1>Performance</h1>
                     </div>
                 </Link>
                 <Link 
