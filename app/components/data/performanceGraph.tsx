@@ -13,7 +13,7 @@ interface ChartData {
     targetsMissed: number;
 }
 
-export default function MonthlyPerformanceGraph() {
+export default function PerformanceGraph() {
     const [chartData, setChartData] = useState<ChartData[]>([]);
 
     useEffect(() => {
@@ -22,7 +22,6 @@ export default function MonthlyPerformanceGraph() {
                 const user = firebaseAuth.currentUser;
                 if (user) {
                     const snapshot = await get(child(ref(database), `pilot/users/${user.uid}/sessions`));
-                    //const snapshot = await get(child(ref(database), `pilot/users/7TgDiZLWHdSBi9qhtqeImsj35c73/sessions`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
@@ -38,40 +37,36 @@ export default function MonthlyPerformanceGraph() {
                                 
                                 const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
                                 const activityDate = new Date(year, month, day);
-                                const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+                                const activityLabel = activityDate.toLocaleString('default', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                });
 
-                                if (daysDiff < 32) {
-                                    const activityLabel = activityDate.toLocaleString('default', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                    });
-    
-                                    var activityTargetsHit = 0;
-                                    var activityTargetsMissed = 0;
-    
-                                    Object.keys(states).forEach((stateKey: string) => {
-                                        const state = states[stateKey] as Record<string, any>;
-                                        const stateTags = state['stateTags'];
-    
-                                        if (stateTags.includes("TargetHit")) {
-                                            activityTargetsHit += 1;
-                                        }
-    
-                                        if (stateTags.includes("TargetMissed")) {
-                                            activityTargetsMissed += 1;
-                                        }
-                                    });
-    
-                                    const activityScore = Math.round((activityTargetsHit / (activityTargetsHit + activityTargetsMissed)) * 100);
-                                    console.log("name: " + activityLabel + ", score: " + activityScore);
-                                    newData.push({
-                                        name: activityKey,
-                                        date: activityLabel,
-                                        score: activityScore,
-                                        targetsHit: activityTargetsHit,
-                                        targetsMissed: activityTargetsMissed
-                                    });
-                                }
+                                var activityTargetsHit = 0;
+                                var activityTargetsMissed = 0;
+
+                                Object.keys(states).forEach((stateKey: string) => {
+                                    const state = states[stateKey] as Record<string, any>;
+                                    const stateTags = state['stateTags'];
+
+                                    if (stateTags.includes("TargetHit")) {
+                                        activityTargetsHit += 1;
+                                    }
+
+                                    if (stateTags.includes("TargetMissed")) {
+                                        activityTargetsMissed += 1;
+                                    }
+                                });
+
+                                const activityScore = Math.round((activityTargetsHit / (activityTargetsHit + activityTargetsMissed)) * 100);
+                                console.log("name: " + activityLabel + ", score: " + activityScore);
+                                newData.push({
+                                    name: activityKey,
+                                    date: activityLabel,
+                                    score: activityScore,
+                                    targetsHit: activityTargetsHit,
+                                    targetsMissed: activityTargetsMissed
+                                });
                             });
                         });
 

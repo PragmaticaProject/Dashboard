@@ -5,7 +5,7 @@ export default function SideNav() {
         <div className="flex flex-col bg-blue-500 shadow-inner py-4 md:h-full md:px-2">
             <div className="flex flex-col">
                 <Link 
-                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-400 rounded-xl"
                 href="/dashboard"
                 >
                     <div className="text-lg text-white">
@@ -13,35 +13,43 @@ export default function SideNav() {
                     </div>
                 </Link>
                 <Link 
-                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
-                href="/"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-400 rounded-xl"
+                href="/dashboard/info/"
                 >
                     <div className="text-lg text-white">
-                        <h1>Client Info</h1>
+                        <h1>User Info</h1>
                     </div>
                 </Link>
                 <Link 
-                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-400 rounded-xl"
                 href="/dashboard/activities/"
                 >
                     <div className="text-lg text-white">
-                        <h1>Assigned Activities</h1>
+                        <h1>Activities</h1>
+                    </div>
+                </Link>
+                <Link 
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-400 rounded-xl"
+                href="/dashboard/weekly/"
+                >
+                    <div className="text-lg text-white">
+                        <h1>Weekly Data</h1>
+                    </div>
+                </Link>
+                <Link 
+                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-400 rounded-xl"
+                href="/dashboard/monthly/"
+                >
+                    <div className="text-lg text-white">
+                        <h1>Monthly Data</h1>
                     </div>
                 </Link>
                 <Link 
                 className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
-                href="/"
+                href="/dashboard/yearly/"
                 >
                     <div className="text-lg text-white">
-                        <h1>Performance</h1>
-                    </div>
-                </Link>
-                <Link 
-                className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
-                href="/"
-                >
-                    <div className="text-lg text-white">
-                        <h1>Progression</h1>
+                        <h1>Yearly Data</h1>
                     </div>
                 </Link>
             </div>

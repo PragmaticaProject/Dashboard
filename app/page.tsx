@@ -78,7 +78,7 @@ export default function Page() {
 
           <button
             type="button" // Change to "submit" if using a form submit
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 hover:bg-blue-400  text-white px-4 py-2 rounded"
             onClick={handleLogin}
           >
             Login

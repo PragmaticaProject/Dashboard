@@ -13,7 +13,7 @@ interface ChartData {
     targetsMissed: number;
 }
 
-export default function MonthlyPerformanceGraph() {
+export default function WeeklyPerformanceGraph() {
     const [chartData, setChartData] = useState<ChartData[]>([]);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function MonthlyPerformanceGraph() {
                                 const activityDate = new Date(year, month, day);
                                 const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
 
-                                if (daysDiff < 32) {
+                                if (daysDiff < 8) {
                                     const activityLabel = activityDate.toLocaleString('default', {
                                         month: 'short',
                                         day: 'numeric',
