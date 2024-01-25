@@ -16,8 +16,8 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
 
                 if (user) {
-                    const snapshot = await get(child(ref(database), `pilot/users/${user.uid}`));
-                    //const snapshot = await get(child(ref(database), `pilot/users/7TgDiZLWHdSBi9qhtqeImsj35c73`));
+                    const userId = localStorage.getItem("currentUser");
+                    const snapshot = await get(child(ref(database), `pilot/users/${userId}`));
                     
                     if (snapshot.exists()) {
                         console.log("Snapshot exists:", snapshot.exists());
@@ -37,14 +37,14 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="p-8 space-y-6">
+        <div>
             {name && (
-                <div>
-                    <h1 className="text-4xl p-8 font-bold text-center">
+                <div className="flex flex-col p-8 space-y-12">
+                    <h1 className="text-4xl font-bold text-center">
                         User: {name}
                     </h1>
                     <div className="text-2xl font-bold text-center">
-                        <h1>Monthly Usage</h1>
+                        <h1>App Usage</h1>
                     </div>
                     <MonthlyPerformanceGraph />
                 </div>

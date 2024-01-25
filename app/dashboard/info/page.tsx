@@ -6,6 +6,7 @@ import { firebaseAuth, database } from "@/app/firebase";
 
 export default function Page() {
     const [name, setName] = useState();
+    const [email, setEmail] = useState();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,12 +14,13 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
 
                 if (user) {
-                    const snapshot = await get(child(ref(database), `pilot/users/${user.uid}`));
+                    const userId = localStorage.getItem("currentUser");
+                    const snapshot = await get(child(ref(database), `pilot/users/${userId}`));
                     
                     if (snapshot.exists()) {
                         console.log("Snapshot exists:", snapshot.exists());
-                        const userName = snapshot.val()['name'];
-                        setName(userName);
+                        setName(snapshot.val()['name']);
+                        setEmail(snapshot.val()['email']);
                     }
                 } else {
                     console.log("User not found.");
@@ -32,11 +34,17 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="p-8 space-y-6">
-            {name && (
-                <div>
-                    <h1 className="text-4xl p-8 font-bold text-center">
-                        User: {name}
+        <div>
+            {name && email && (
+                <div className="p-8 space-y-12">
+                    <h1 className="text-4xl font-bold text-center">
+                        User Info
+                    </h1>
+                    <h1 className="text-lg text-center">
+                        Name: {name}
+                    </h1>
+                    <h1 className="text-lg text-center">
+                        Email: {email}
                     </h1>
                 </div>
             )}

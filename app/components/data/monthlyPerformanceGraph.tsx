@@ -21,8 +21,8 @@ export default function MonthlyPerformanceGraph() {
             try {
                 const user = firebaseAuth.currentUser;
                 if (user) {
-                    const snapshot = await get(child(ref(database), `pilot/users/${user.uid}/sessions`));
-                    //const snapshot = await get(child(ref(database), `pilot/users/7TgDiZLWHdSBi9qhtqeImsj35c73/sessions`));
+                    const userId = localStorage.getItem("currentUser");
+                    const snapshot = await get(child(ref(database), `pilot/users/${userId}/sessions`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
@@ -75,7 +75,6 @@ export default function MonthlyPerformanceGraph() {
                             });
                         });
 
-                        // Set the newData array as the chartData state
                         setChartData(newData);
                     } else {
                         console.log("No data available");

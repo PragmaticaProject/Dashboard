@@ -20,7 +20,7 @@ export default function NavBar() {
             <div className="flex flex-col md:flex-row mx-auto">
                 <Link 
                 className="flex py-2 px-8 justify-center hover:bg-gray-300 rounded-lg"
-                href="/"
+                href="/dashboard/users"
                 >
                     <div className="text-md text-black">
                         <h1>Users</h1>

@@ -46,10 +46,10 @@ export default function SideNav() {
                 </Link>
                 <Link 
                 className="flex px-4 py-2 my-2 justify-start hover:bg-blue-300 rounded-xl"
-                href="/dashboard/yearly/"
+                href="/dashboard/total/"
                 >
                     <div className="text-lg text-white">
-                        <h1>Yearly Data</h1>
+                        <h1>Total Data</h1>
                     </div>
                 </Link>
             </div>
