@@ -28,7 +28,7 @@ export default function NavBar() {
                 </Link>
                 <Link 
                 className="flex py-2 px-8 justify-center hover:bg-gray-300 rounded-lg"
-                href="/"
+                href="/dashboard/profile"
                 >
                     <div className="text-md text-black">
                         <h1>Profile</h1>
@@ -36,7 +36,7 @@ export default function NavBar() {
                 </Link>
                 <Link 
                 className="flex py-2 px-8 justify-center hover:bg-gray-300 rounded-lg"
-                href="/"
+                href="/dashboard/settings"
                 >
                     <div className="text-md text-black">
                         <h1>Settings</h1>
@@ -44,7 +44,7 @@ export default function NavBar() {
                 </Link>
                 <Link 
                 className="flex py-2 px-8 justify-center hover:bg-gray-300 rounded-lg"
-                href="https://calendly.com/karthikprasad62/pragmatica-meeting"
+                href="/dashboard/support"
                 >
                     <div className="text-md text-black">
                         <h1>Support</h1>
