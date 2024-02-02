@@ -45,11 +45,8 @@ export default function Page() {
     };
 
     return (
-        <div className="flex flex-col space-y-6 justify-center">
+        <div className="flex flex-col space-y-12 justify-center">
             <h1 className="text-4xl px-8 font-bold text-center">
-                Welcome! 
-            </h1>
-            <h1 className="text-lg px-8 font-bold text-center">
                 Choose a user to get started!
             </h1>
             <div className="mx-auto max-w-lg">

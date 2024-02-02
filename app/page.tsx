@@ -18,7 +18,7 @@ export default function Page() {
         const user = userCredential.user;
         console.log("user signed in successfully.");
         if (user) {
-          router.push('/dashboard/users');
+          router.push('/dashboard/profile');
         }
       })
       .catch((error) => {

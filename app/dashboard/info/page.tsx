@@ -71,8 +71,8 @@ export default function Page() {
     }, []);
 
     return (
-        <div className="flex justify-center flex-col md:flex-row">
-            <div className="mx-auto px-12">
+        <div className="flex mx-auto justify-center flex-col md:flex-row">
+            <div className="px-4">
                 <h1 className="text-4xl font-bold text-center">Personal Info</h1>
                 {(
                     <div className="p-8">
@@ -99,7 +99,7 @@ export default function Page() {
                     </div>
                 )}
             </div>
-            <div className="mx-auto px-12">
+            <div className="px-4">
                 <h1 className="text-4xl font-bold text-center">App Info</h1>
                 {(
                     <div className="p-8">

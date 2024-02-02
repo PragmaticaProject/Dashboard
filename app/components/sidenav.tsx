@@ -49,7 +49,7 @@ export default function SideNav() {
                 href="/dashboard/total/"
                 >
                     <div className="text-lg text-white">
-                        <h1>Total Data</h1>
+                        <h1>Yearly Data</h1>
                     </div>
                 </Link>
             </div>
