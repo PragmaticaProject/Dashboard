@@ -37,7 +37,7 @@ export default function PerformanceGraph() {
                                 const states = activity['states'] as Record<string, any>;
                                 
                                 const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(year, month, day);
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
                                 const activityLabel = activityDate.toLocaleString('default', {
                                     month: 'short',
                                     day: 'numeric',

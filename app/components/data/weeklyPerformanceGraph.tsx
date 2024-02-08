@@ -37,7 +37,7 @@ export default function WeeklyPerformanceGraph() {
                                 const states = activity['states'] as Record<string, any>;
                                 
                                 const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(year, month, day);
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
                                 const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
 
                                 if (daysDiff < 8) {
