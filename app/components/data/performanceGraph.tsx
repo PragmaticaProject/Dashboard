@@ -41,6 +41,7 @@ export default function PerformanceGraph() {
                                 const activityLabel = activityDate.toLocaleString('default', {
                                     month: 'short',
                                     day: 'numeric',
+                                    year: 'numeric'
                                 });
 
                                 var activityTargetsHit = 0;
@@ -71,7 +72,7 @@ export default function PerformanceGraph() {
                             });
                         });
 
-                        // Set the newData array as the chartData state
+                        newData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         setChartData(newData);
                     } else {
                         console.log("No data available");

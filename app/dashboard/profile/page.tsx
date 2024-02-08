@@ -7,7 +7,6 @@ import Link from "next/link";
 
 export default function Page() {
     const [name, setName] = useState();
-    const [org, setOrg] = useState();
     
     useEffect(() => {
         const fetchData = async () => {
@@ -15,11 +14,10 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
 
                 if (user) {
-                    const snapshot = await get(child(ref(database), `pilot/clinicians/${user.uid}`));
+                    const snapshot = await get(child(ref(database), `pilot/admins/${user.uid}`));
 
                     if (snapshot.exists()) {
                         setName(snapshot.val()['name']);
-                        setOrg(snapshot.val()['organization']);
                     }
                         
                 } else {
@@ -35,11 +33,10 @@ export default function Page() {
     
     return (
         <div className="flex flex-col justify-center text-center space-y-12">
-            <h1 className="text-4xl font-bold">Welcome to the Pragmatica Dashboard</h1>
+            <h1 className="text-4xl">Welcome to the Pragmatica Dashboard</h1>
             {(
                 <div className="mx-auto px-16 py-16 space-y-6 rounded-lg shadow-xl text-2xl">
-                    <h1>Name: {name}</h1>
-                    <h1>Organization: {org}</h1>
+                    <h1 className="text-2xl font-bold">{name}</h1>
                     <div className="py-8 space-y-6">
                         <h1 className="text-2xl font-bold">Select a user to view their data</h1>
                         <Link 

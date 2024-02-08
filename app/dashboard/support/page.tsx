@@ -19,6 +19,9 @@ export default function Page() {
                     </div>
                 </Link>
             </div>
+            <div>
+                <h1>If you would like to request any new data or other features, please feel free to contact us and ask!</h1>
+            </div>
         </div>
     );
 }
