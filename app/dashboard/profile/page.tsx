@@ -14,7 +14,7 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
 
                 if (user) {
-                    const snapshot = await get(child(ref(database), `pilot/admins/${user.uid}`));
+                    const snapshot = await get(child(ref(database), `prod/admins/${user.uid}`));
 
                     if (snapshot.exists()) {
                         setName(snapshot.val()['name']);

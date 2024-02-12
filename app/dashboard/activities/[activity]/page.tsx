@@ -24,7 +24,7 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `pilot/users/${userId}/sessions`));
+                    const snapshot = await get(child(ref(database), `prod/users/${userId}/sessions`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");

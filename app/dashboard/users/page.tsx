@@ -15,17 +15,19 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
 
                 if (user) {
-                    const snapshot = await get(child(ref(database), `pilot/admins/${user.uid}/users`));
+                    const snapshot = await get(child(ref(database), `prod/admins/${user.uid}/users`));
 
                     if (snapshot.exists()) {
                         const userData = snapshot.val();
-
+                        console.log("snapshot exists");
+                        console.log(userData);
                         const userList = Object.entries(userData).map(([userId, userInfo]) => ({
                             userId,
                             ...(userInfo as { name: string; email: string }),
                         }));
 
                         setUsers(userList);
+                        console.log("usersList: " + userList.toString());
                     }
                 } else {
                     console.log("User not found.");

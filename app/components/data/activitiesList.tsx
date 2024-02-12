@@ -18,7 +18,7 @@ export default function ActivitiesList() {
             const user = auth.currentUser;
             if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(dbRef, `pilot/users/${userId}`));
+                    const snapshot = await get(child(dbRef, `prod/users/${userId}`));
                 
                 if (snapshot.exists()) {
                     console.log("snapshot found.");

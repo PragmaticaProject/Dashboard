@@ -23,7 +23,7 @@ export default function Page() {
 
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `pilot/users/${userId}`));
+                    const snapshot = await get(child(ref(database), `prod/users/${userId}`));
                     
                     if (snapshot.exists()) {
                         console.log("Snapshot exists:", snapshot.exists());

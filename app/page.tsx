@@ -16,7 +16,7 @@ export default function Page() {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("user signed in successfully.");
+        console.log(user.email + " has signed in successfully.");
         if (user) {
           router.push('/dashboard/profile');
         }
@@ -77,7 +77,7 @@ export default function Page() {
           </div>
 
           <button
-            type="button" // Change to "submit" if using a form submit
+            type="button"
             className="bg-blue-500 hover:bg-blue-400  text-white px-4 py-2 rounded"
             onClick={handleLogin}
           >
