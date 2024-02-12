@@ -61,7 +61,6 @@ export default function PerformanceGraph() {
                                 });
 
                                 const activityScore = Math.round((activityTargetsHit / (activityTargetsHit + activityTargetsMissed)) * 100);
-                                console.log("name: " + activityLabel + ", score: " + activityScore);
                                 newData.push({
                                     name: activityKey,
                                     date: activityLabel,

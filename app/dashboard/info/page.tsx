@@ -14,7 +14,7 @@ export default function Page() {
     const [useVoiceRecognition, setUseVoiceRecognition] = useState();
     const [currentTokens, setCurrentTokens] = useState();
     const [totalTokens, setTotalTokens] = useState();
-    const [usedTokens, setUsedTokens] = useState();
+    const [usedTokens, setUsedTokens] = useState<string>();
 
     useEffect(() => {
         const fetchData = async () => {

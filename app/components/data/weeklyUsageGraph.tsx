@@ -1,22 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+interface ChartData {
+    day: string;
+    count: number;
+} 
+
 export default function WeeklyUsageGraph() {
-    
-    var countData = [0, 0, 0, 0, 0, 0, 0];
-    var chartData = [
-        {day: "Day 1", count: countData[0]},
-        {day: "Day 2", count: countData[1]},
-        {day: "Day 3", count: countData[2]},
-        {day: "Day 4", count: countData[3]},
-        {day: "Day 5", count: countData[4]},
-        {day: "Day 6", count: countData[5]},
-        {day: "Day 7", count: countData[6]}
-    ]
+    const labels = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"];
+    const [chartData, setChartData] = useState<ChartData[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,6 +26,11 @@ export default function WeeklyUsageGraph() {
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
 
+                        const newData: ChartData[] = labels.map((label, index) => ({
+                            day: label,
+                            count: 0,
+                        }));
+
                         Object.keys(snapshot.val()).forEach((sessionKey: string) => {
                             const session = snapshot.val()[sessionKey];
                             const activities = session['activities'] as Record<string, any>;
@@ -39,12 +40,14 @@ export default function WeeklyUsageGraph() {
                                 const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
                                 const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
                                 const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-                                console.log("date: " + activityDate.toDateString() + ", daysDiff: " + daysDiff);
+
                                 if (daysDiff < 7) {
-                                    countData[6 - daysDiff] += 1;
+                                    newData[6 - daysDiff].count += 1;
                                 }
                             });
                         });
+                        
+                        setChartData(newData);
                     } else {
                         console.log("No data available");
                     }

@@ -75,7 +75,6 @@ export default function WeeklyPerformanceGraph() {
                             });
                         });
 
-                        // Set the newData array as the chartData state
                         setChartData(newData);
                     } else {
                         console.log("No data available");

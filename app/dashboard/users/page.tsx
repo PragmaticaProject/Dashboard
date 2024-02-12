@@ -5,8 +5,14 @@ import { useRouter } from 'next/navigation';
 import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 
+interface User {
+    userId: string;
+    name: string;
+    email: string;
+}
+
 export default function Page() {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<User[]>([]);
     const router = useRouter();
 
     useEffect(() => {
@@ -27,7 +33,6 @@ export default function Page() {
                         }));
 
                         setUsers(userList);
-                        console.log("usersList: " + userList.toString());
                     }
                 } else {
                     console.log("User not found.");

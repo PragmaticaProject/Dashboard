@@ -5,9 +5,14 @@ import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+interface ChartData {
+    date: string;
+    count: number;
+}
+
 export default function YearlyUsageGraph() {
     const labels = ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Month 7", "Month 8", "Month 9", "Month 10", "Month 11", "Month 12"];
-    const [chartData, setChartData] = useState([]);
+    const [chartData, setChartData] = useState<ChartData[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,7 +26,7 @@ export default function YearlyUsageGraph() {
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
 
-                        const newData = labels.map((label, index) => ({
+                        const newData: ChartData[] = labels.map((label, index) => ({
                             date: label,
                             count: 0,
                         }));
