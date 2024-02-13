@@ -35,19 +35,19 @@ export default function Page() {
                         Object.keys(settings).forEach((settingsKey: string) => {
                             switch(settingsKey) {
                                 case "play MC audio":
-                                    setPlayMCAudio(settings[settingsKey]);
+                                    setPlayMCAudio((settings[settingsKey]).toString());
                                     break;
                                 case "play speaking audio":
-                                    setPlaySpeakingAudio(settings[settingsKey]);
+                                    setPlaySpeakingAudio((settings[settingsKey]).toString());
                                     break;
                                 case "show text":
-                                    setShowText(settings[settingsKey]);
+                                    setShowText((settings[settingsKey]).toString());
                                     break;
                                 case "show tips":
-                                    setShowTips(settings[settingsKey]);
+                                    setShowTips((settings[settingsKey]).toString());
                                     break;
                                 case "use voice recognition":
-                                    setUseVoiceRecognition(settings[settingsKey]);
+                                    setUseVoiceRecognition((settings[settingsKey]).toString());
                                     break;
                                 default:
                                     console.log("param not found for settings key: " + settingsKey);
