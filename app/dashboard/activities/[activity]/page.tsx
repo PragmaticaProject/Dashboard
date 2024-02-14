@@ -8,6 +8,8 @@ import ActivityGraph from '@/app/components/data/activityGraph';
 import ActivityTable from '@/app/components/data/activityTable';
 
 interface ChartData {
+    sessionId: string;
+    activityId: string;
     date: string;
     score: number;
     targetsHit: number;
@@ -41,7 +43,7 @@ export default function Page() {
                                     const states = activity['states'] as Record<string, any>;
                                     
                                     const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                    const activityDate = new Date(year, month, day);
+                                    const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
                                     const activityLabel = activityDate.toLocaleString('default', {
                                         month: 'short',
                                         day: 'numeric',
@@ -66,6 +68,8 @@ export default function Page() {
                                     const activityScore = Math.round((activityTargetsHit / (activityTargetsHit + activityTargetsMissed)) * 100);
                                     console.log("name: " + activityLabel + ", score: " + activityScore);
                                     newData.push({
+                                        sessionId: sessionKey,
+                                        activityId: activityKey,
                                         date: activityLabel,
                                         score: activityScore,
                                         targetsHit: activityTargetsHit,

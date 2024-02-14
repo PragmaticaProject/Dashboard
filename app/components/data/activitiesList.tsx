@@ -13,7 +13,6 @@ export default function ActivitiesList() {
 
   useEffect(() => {
     const fetchData = async () => {
-
         try {
             const user = auth.currentUser;
             if (user) {

@@ -86,14 +86,6 @@ export default function Page() {
                                     <td className="border px-4 py-2">Email:</td>
                                     <td className="border px-4 py-2">{email}</td>
                                 </tr>
-                                <tr>
-                                    <td className="border px-4 py-2">Phone:</td>
-                                    <td className="border px-4 py-2">123-456-7890</td>
-                                </tr>
-                                <tr>
-                                    <td className="border px-4 py-2">Address:</td>
-                                    <td className="border px-4 py-2">123 Main St</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -125,6 +117,17 @@ export default function Page() {
                                     <td className="border px-4 py-2">Use Voice Recognition:</td>
                                     <td className="border px-4 py-2">{useVoiceRecognition}</td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+            <div className="px-4">
+                <h1 className="text-4xl font-bold text-center">Token Info</h1>
+                {(
+                    <div className="p-8">
+                        <table className="table-auto">
+                            <tbody>
                                 <tr>
                                     <td className="border px-4 py-2">Total Tokens:</td>
                                     <td className="border px-4 py-2">{totalTokens}</td>

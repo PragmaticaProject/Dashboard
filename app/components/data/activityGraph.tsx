@@ -4,6 +4,8 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface ChartData {
+  sessionId: string;
+  activityId: string;
   date: string;
   score: number;
   targetsHit: number;
