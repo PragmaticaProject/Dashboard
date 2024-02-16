@@ -4,6 +4,7 @@ import ActivitiesList from "@/app/components/data/activitiesList";
 export default function Page() {
     return (
         <div className="flex-col space-y-6">
+            <h1 className="text-center text-2xl font-bold">Assigned Activities</h1>
             <ActivitiesList />
             <div className="flex mx-auto justify-center space-x-12">
                 <Link 

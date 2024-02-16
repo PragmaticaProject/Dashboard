@@ -6,6 +6,7 @@ import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 import PerformanceGraph from "../components/data/performanceGraph";
 import Link from "next/link";
+import ActivitiesList from "../components/data/activitiesList";
 
 export default function Page() {
     const [name, setName] = useState();
@@ -40,45 +41,49 @@ export default function Page() {
     return (
         <div>
             {name && (
-                <div className="flex flex-col p-8 space-y-12">
+                <div className="flex flex-col p-8 space-y-6">
                     <h1 className="text-4xl font-bold text-center">
                         User: {name}
                     </h1>
-                    <div className="text-2xl font-bold text-center">
-                        <h1>Performance</h1>
+                    <div>
+                        <div className="flex flex-col md:flex-row space-x-6 pt-12">
+                            <div className="w-full bg-blue-500 border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+                                <Link 
+                                className="flex px-4 py-2 my-2 justify-center hover:bg-blue-400 rounded-xl"
+                                href="/dashboard/weekly/"
+                                >
+                                    <div className="text-lg text-white">
+                                        <h1>Weekly Data</h1>
+                                    </div>
+                                </Link>
+                            </div>
+                            <div className="w-full bg-blue-500 border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+                                <Link 
+                                className="flex px-4 py-2 my-2 justify-center hover:bg-blue-400 rounded-xl"
+                                href="/dashboard/monthly/"
+                                >
+                                    <div className="text-lg text-white">
+                                        <h1>Monthly Data</h1>
+                                    </div>
+                                </Link>
+                            </div>
+                            <div className="w-full bg-blue-500 border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+                                <Link 
+                                className="flex px-4 py-2 my-2 justify-center hover:bg-blue-400 rounded-xl"
+                                href="/dashboard/total/"
+                                >
+                                    <div className="text-lg text-white">
+                                        <h1>Yearly Data</h1>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
-                    <PerformanceGraph />
-                    <div className="flex flex-col md:flex-row space-x-6">
-                        <div className="w-full bg-blue-500 border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-                            <Link 
-                            className="flex px-4 py-2 my-2 justify-center hover:bg-blue-400 rounded-xl"
-                            href="/dashboard/weekly/"
-                            >
-                                <div className="text-lg text-white">
-                                    <h1>Weekly Data</h1>
-                                </div>
-                            </Link>
-                        </div>
-                        <div className="w-full bg-blue-500 border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-                            <Link 
-                            className="flex px-4 py-2 my-2 justify-center hover:bg-blue-400 rounded-xl"
-                            href="/dashboard/monthly/"
-                            >
-                                <div className="text-lg text-white">
-                                    <h1>Monthly Data</h1>
-                                </div>
-                            </Link>
-                        </div>
-                        <div className="w-full bg-blue-500 border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-                            <Link 
-                            className="flex px-4 py-2 my-2 justify-center hover:bg-blue-400 rounded-xl"
-                            href="/dashboard/total/"
-                            >
-                                <div className="text-lg text-white">
-                                    <h1>Yearly Data</h1>
-                                </div>
-                            </Link>
-                        </div>
+                    <div className="w-full">
+                        <h1 className="text-xl font-bold text-center py-4">
+                            Click on an activity to view its progression
+                        </h1>
+                        <ActivitiesList />
                     </div>
                 </div>
             )}
