@@ -157,7 +157,7 @@ export default function Page() {
                 <table className="mx-auto bg-white border border-gray-300 shadow rounded-lg overflow-hidden">
                     <thead className="bg-blue-500">
                         <tr>
-                            <th className="py-4 px-24 border-b text-white">Targets Hit</th>
+                            <th className="py-4 px-24 border-b text-white">Tips Given</th>
                         </tr>
                     </thead>
                     <tbody>
