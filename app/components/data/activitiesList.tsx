@@ -16,12 +16,12 @@ export default function ActivitiesList() {
         try {
             const user = auth.currentUser;
             if (user) {
-                    const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(dbRef, `prod/users/${userId}`));
-                
+                const userId = localStorage.getItem("currentUser");
+                const snapshot = await get(child(dbRef, `prod/users/${userId}/activities/assignedActivities`));
+            
                 if (snapshot.exists()) {
                     console.log("snapshot found.");
-                    setData(snapshot.val().activities);
+                    setData(snapshot.val());
                 } else {
                     console.log("No data available");
                 }
@@ -50,7 +50,7 @@ export default function ActivitiesList() {
             {Object.entries(data).map(([key, value]) => (
               <tr key={key} className="border-b">
                  <td className="py-4 px-4 text-center hover:bg-gray-100">
-                  <Link href={{ pathname: `/dashboard/activities/${encodeURIComponent(key)}`, 
+                  <Link href={{ pathname: `/dashboard/activities/assignedActivities/${encodeURIComponent(key)}`, 
                     query: { activityName: key } }}>
                     <div>{key}</div>
                   </Link>

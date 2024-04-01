@@ -8,9 +8,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 interface ChartData {
     name: string;
     date: string;
-    score: number;
-    targetsHit: number;
-    targetsMissed: number;
+    score: string;
+    tokens: string;
 }
 
 export default function PerformanceGraph() {
@@ -22,52 +21,28 @@ export default function PerformanceGraph() {
                 const user = firebaseAuth.currentUser;
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/users/${userId}/sessions`));
+                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
                         const newData: ChartData[] = [];
 
-                        Object.keys(snapshot.val()).forEach((sessionKey: string) => { // iterate through sessions
-                            const session = snapshot.val()[sessionKey];
-                            const activities = session['activities'] as Record<string, any>;
+                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
+                            const activity = snapshot.val()[activityKey];
 
-                            Object.keys(activities).forEach((activityKey: string) => { // iterate through activities
-                                const activity = activities[activityKey];
-                                const states = activity['states'] as Record<string, any>;
-                                
-                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                                const activityLabel = activityDate.toLocaleString('default', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                });
+                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                            const activityLabel = activityDate.toLocaleString('default', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric'
+                            });
 
-                                var activityTargetsHit = 0;
-                                var activityTargetsMissed = 0;
-
-                                Object.keys(states).forEach((stateKey: string) => {
-                                    const state = states[stateKey] as Record<string, any>;
-                                    const stateTags = state['stateTags'];
-
-                                    if (stateTags.includes("TargetHit")) {
-                                        activityTargetsHit += 1;
-                                    }
-
-                                    if (stateTags.includes("TargetMissed")) {
-                                        activityTargetsMissed += 1;
-                                    }
-                                });
-
-                                const activityScore = Math.round((activityTargetsHit / (activityTargetsHit + activityTargetsMissed)) * 100);
-                                newData.push({
-                                    name: activityKey,
-                                    date: activityLabel,
-                                    score: activityScore,
-                                    targetsHit: activityTargetsHit,
-                                    targetsMissed: activityTargetsMissed
-                                });
+                            newData.push({
+                                name: activity['name'],
+                                date: activityLabel,
+                                score: activity['score'],
+                                tokens: activity['tokensAdded']
                             });
                         });
 
@@ -113,8 +88,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           <p>{`Name: ${data.name}`}</p>
           <p>{`Date: ${data.date}`}</p>
           <p>{`Score: ${data.score}`}</p>
-          <p>{`Targets Hit: ${data.targetsHit}`}</p>
-          <p>{`Targets Missed: ${data.targetsMissed}`}</p>
+          <p>{`Tokens Added: ${data.tokens}`}</p>
         </div>
       );
     }

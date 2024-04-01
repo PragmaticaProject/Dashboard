@@ -32,7 +32,7 @@ export default function Page() {
                         Object.keys(activities).forEach((activityKey: string) => {
                             if (sessionID)
                             {
-                                newData[sessionID] = activityKey;
+                                newData[activityKey] = activityKey.split('-')[0];
                             }
                         });
 
@@ -87,8 +87,8 @@ export default function Page() {
                     {Object.entries(data).map(([key, value]) => (
                     <tr key={key} className="border-b">
                         <td className="py-2 px-4 text-center hover:bg-gray-100">
-                        <Link href={{ pathname: `/dashboard/sessions/${encodeURIComponent(key)}/${encodeURIComponent(value)}`, 
-                            query: { sessionId: key, activityName: value } }}>
+                        <Link href={{ pathname: `/dashboard/playthroughs/${encodeURIComponent(key)}`, 
+                            query: { activityId: key, activityName: value } }}>
                             <div>{value}</div>
                         </Link>
                         </td>

@@ -10,9 +10,20 @@ interface ChartData {
     count: number;
 } 
 
+
+
 export default function WeeklyUsageGraph() {
-    const labels = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7"];
     const [chartData, setChartData] = useState<ChartData[]>([]);
+
+    const labels = [
+        convertWeekdayToLabel(6), 
+        convertWeekdayToLabel(5), 
+        convertWeekdayToLabel(4), 
+        convertWeekdayToLabel(3), 
+        convertWeekdayToLabel(2), 
+        convertWeekdayToLabel(1), 
+        convertWeekdayToLabel(0), 
+    ];
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,7 +32,7 @@ export default function WeeklyUsageGraph() {
 
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/users/${userId}/sessions`));
+                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
@@ -31,22 +42,18 @@ export default function WeeklyUsageGraph() {
                             count: 0,
                         }));
 
-                        Object.keys(snapshot.val()).forEach((sessionKey: string) => {
-                            const session = snapshot.val()[sessionKey];
-                            const activities = session['activities'] as Record<string, any>;
+                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
+                            const activity = snapshot.val()[activityKey];
 
-                            Object.keys(activities).forEach((activityKey: string) => {
-                                const activity = activities[activityKey];
-                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                                const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                            const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
 
-                                if (daysDiff < 7) {
-                                    newData[6 - daysDiff].count += 1;
-                                }
-                            });
+                            if (daysDiff < 7) {
+                                newData[6 - daysDiff].count += 1;
+                            }
                         });
-                        
+
                         setChartData(newData);
                     } else {
                         console.log("No data available");
@@ -76,4 +83,15 @@ export default function WeeklyUsageGraph() {
             </ResponsiveContainer>
         </div>
     );
+}
+
+function convertWeekdayToLabel(day: number) {
+    const dateObj = new Date();
+    dateObj.setDate(dateObj.getDate() - day);
+
+    const outputString = dateObj.toLocaleString('default', {
+        month: 'short',
+        day: 'numeric',
+    });
+    return outputString;
 }

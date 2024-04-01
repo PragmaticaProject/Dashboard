@@ -8,9 +8,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 interface ChartData {
     name: string;
     date: string;
-    score: number;
-    targetsHit: number;
-    targetsMissed: number;
+    score: string;
+    tokens: string;
 }
 
 export default function WeeklyPerformanceGraph() {
@@ -22,59 +21,35 @@ export default function WeeklyPerformanceGraph() {
                 const user = firebaseAuth.currentUser;
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/users/${userId}/sessions`));
+                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
                         const newData: ChartData[] = [];
 
-                        Object.keys(snapshot.val()).forEach((sessionKey: string) => { // iterate through sessions
-                            const session = snapshot.val()[sessionKey];
-                            const activities = session['activities'] as Record<string, any>;
-
-                            Object.keys(activities).forEach((activityKey: string) => { // iterate through activities
-                                const activity = activities[activityKey];
-                                const states = activity['states'] as Record<string, any>;
-                                
-                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                                const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-
-                                if (daysDiff < 8) {
-                                    const activityLabel = activityDate.toLocaleString('default', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                    });
+                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
+                            const activity = snapshot.val()[activityKey];
     
-                                    var activityTargetsHit = 0;
-                                    var activityTargetsMissed = 0;
+                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                            const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
     
-                                    Object.keys(states).forEach((stateKey: string) => {
-                                        const state = states[stateKey] as Record<string, any>;
-                                        const stateTags = state['stateTags'];
+                            if (daysDiff < 8) {
+                                const activityLabel = activityDate.toLocaleString('default', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                });
     
-                                        if (stateTags.includes("TargetHit")) {
-                                            activityTargetsHit += 1;
-                                        }
-    
-                                        if (stateTags.includes("TargetMissed")) {
-                                            activityTargetsMissed += 1;
-                                        }
-                                    });
-    
-                                    const activityScore = Math.round((activityTargetsHit / (activityTargetsHit + activityTargetsMissed)) * 100);
-                                    console.log("name: " + activityLabel + ", score: " + activityScore);
-                                    newData.push({
-                                        name: activityKey,
-                                        date: activityLabel,
-                                        score: activityScore,
-                                        targetsHit: activityTargetsHit,
-                                        targetsMissed: activityTargetsMissed
-                                    });
-                                }
-                            });
+                                newData.push({
+                                    name: activity['name'],
+                                    date: activityLabel,
+                                    score: activity['score'],
+                                    tokens: activity['tokensAdded']
+                                });
+                            }
                         });
 
+                        newData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                         setChartData(newData);
                     } else {
                         console.log("No data available");

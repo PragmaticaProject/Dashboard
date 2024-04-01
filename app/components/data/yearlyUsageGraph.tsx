@@ -21,7 +21,7 @@ export default function YearlyUsageGraph() {
 
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/users/${userId}/sessions`));
+                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
@@ -31,42 +31,38 @@ export default function YearlyUsageGraph() {
                             count: 0,
                         }));
 
-                        Object.keys(snapshot.val()).forEach((sessionKey: string) => {
-                            const session = snapshot.val()[sessionKey];
-                            const activities = session['activities'] as Record<string, any>;
+                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
+                            const activity = snapshot.val()[activityKey];
 
-                            Object.keys(activities).forEach((activityKey: string) => {
-                                const activity = activities[activityKey];
-                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                                const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-                                
-                                if (daysDiff < 31) {
-                                    newData[11].count += 1;
-                                } else if (daysDiff < 59) {
-                                    newData[10].count += 1;
-                                } else if (daysDiff < 90) {
-                                    newData[9].count += 1;
-                                } else if (daysDiff < 120) {
-                                    newData[8].count += 1;
-                                } else if (daysDiff < 151) {
-                                    newData[7].count += 1;
-                                } else if (daysDiff < 181) {
-                                    newData[6].count += 1;
-                                } else if (daysDiff < 212) {
-                                    newData[5].count += 1;
-                                } else if (daysDiff < 243) {
-                                    newData[4].count += 1;
-                                } else if (daysDiff < 273) {
-                                    newData[3].count += 1;
-                                } else if (daysDiff < 304) {
-                                    newData[2].count += 1;
-                                } else if (daysDiff < 334) {
-                                    newData[1].count += 1;
-                                } else if (daysDiff < 365) {
-                                    newData[0].count += 1;
-                                }
-                            });
+                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                            const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+                            
+                            if (daysDiff < 31) {
+                                newData[11].count += 1;
+                            } else if (daysDiff < 59) {
+                                newData[10].count += 1;
+                            } else if (daysDiff < 90) {
+                                newData[9].count += 1;
+                            } else if (daysDiff < 120) {
+                                newData[8].count += 1;
+                            } else if (daysDiff < 151) {
+                                newData[7].count += 1;
+                            } else if (daysDiff < 181) {
+                                newData[6].count += 1;
+                            } else if (daysDiff < 212) {
+                                newData[5].count += 1;
+                            } else if (daysDiff < 243) {
+                                newData[4].count += 1;
+                            } else if (daysDiff < 273) {
+                                newData[3].count += 1;
+                            } else if (daysDiff < 304) {
+                                newData[2].count += 1;
+                            } else if (daysDiff < 334) {
+                                newData[1].count += 1;
+                            } else if (daysDiff < 365) {
+                                newData[0].count += 1;
+                            }
                         });
 
                         setChartData(newData);
