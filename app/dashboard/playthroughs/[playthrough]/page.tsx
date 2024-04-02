@@ -12,63 +12,55 @@ export default function Page() {
     const [activityEndDT, setActivityEndDT] = useState<string>();
     const [activityScore, setActivityScore] = useState<string>();
     const [activityDuration, setActivityDuration] = useState<string>();
-    const [targetsHit, setTargetsHit] = useState<string[]>();
-    const [targetsMissed, setTargetsMissed] = useState<string[]>();
-    const [tips, setTips] = useState<string[]>();
     const [pieChartData, setPieChartData] = useState<{ name: string; value: number; fill: string }[]>([]);
-    
+    const [targetsHitNameList, setTargetsHitNameList] = useState<string[]>();
+    const [targetsHitDescriptionList, setTargetsHitDescriptionList] = useState<string[]>();
+    const [targetsMissedNameList, setTargetsMissedNameList] = useState<string[]>();
+    const [targetsMissedDescriptionList, setTargetsMissedDescriptionList] = useState<string[]>();
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const user = firebaseAuth.currentUser;
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot1 = await get(child(ref(database), `prod/activities/history/${userId}/${activityId}`));
-                    const snapshot2 = await get(child(ref(database), `prod/activities/playthroughs/${userId}/${activityId}`));
+                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}/${activityId}`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
-                        const targetsHitList: string[] = [];
-                        const targetsMissList: string[] = [];
-                        const tipsList: string[] = [];
-                        const states = snapshot.val() as Record<string, any>;
+                        const activity = snapshot.val();
 
                         setActivityStartDT(formatDateTime(activity['startDT']));
                         setActivityEndDT(formatDateTime(activity['endDT']));
                         setActivityScore(activity['score']);
                         setActivityDuration(activity['duration']);
 
-                        
-                        const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                        const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                        const activityLabel = activityDate.toLocaleString('default', {
-                            month: 'short',
-                            day: 'numeric',
+                        const targetsHit = activity['targetsHit'];
+                        const targetsMissed = activity['targetsMissed'];
+                        const tempTargetsHitNameList: string[] = [];
+                        const tempTargetsHitDescriptionList: string[] = [];
+                        const tempTargetsMissedNameList: string[] = [];
+                        const tempTargetsMissedDescriptionList: string[] = [];
+
+                        Object.keys(targetsHit).forEach((targetHitKey: string) => {
+                            tempTargetsHitNameList.push(targetHitKey);
+                            tempTargetsHitDescriptionList.push(targetsHit[targetHitKey]);
                         });
 
-
-                        Object.keys(states).forEach((stateKey: string) => {
-                            const state = states[stateKey] as Record<string, any>;
-                            const stateTags = state['stateTags'];
-
-                            if (stateTags.includes("TargetHit")) {
-                                targetsHitList.push(stateKey);
-                            }
-                            if (stateTags.includes("TargetMissed")) {
-                                targetsMissList.push(stateKey);
-                            }
-                            if (stateTags.includes("Tip")) {
-                                tipsList.push(stateKey);
-                            }
+                        Object.keys(targetsMissed).forEach((targetMissedKey: string) => {
+                            tempTargetsMissedNameList.push(targetMissedKey);
+                            tempTargetsMissedDescriptionList.push(targetsMissed[targetMissedKey]);
                         });
 
-                        setTargetsHit(targetsHitList);
-                        setTargetsMissed(targetsMissList);
-                        setTips(tipsList);
+                        setTargetsHitNameList(tempTargetsHitNameList);
+                        setTargetsHitDescriptionList(tempTargetsHitDescriptionList);
+                        setTargetsMissedNameList(tempTargetsMissedNameList);
+                        setTargetsMissedDescriptionList(tempTargetsMissedDescriptionList);
 
                         setPieChartData([
-                            { name: 'Targets Hit', value: targetsHitList.length, fill: '#2196F3' },
-                            { name: 'Targets Missed', value: targetsMissList.length, fill: '#EF5350' }
+                            { name: 'Targets Hit', value: tempTargetsHitNameList.length, fill: '#2196F3' },
+                            { name: 'Targets Missed', value: tempTargetsMissedNameList.length, fill: '#EF5350' }
                         ]);
                     } else {
                         console.log("No data available");
@@ -106,7 +98,7 @@ export default function Page() {
     
 
     return (
-        <div className="flex flex-col space-y-12">
+        <div className="flex flex-col space-y-6">
             <div className="flex flex-col md:flex-row">
                 <div className="flex flex-col mx-auto justify-center px-16 rounded-lg shadow-xl">
                     <h1 className="text-center text-2xl font-bold mb-8">Activity Details</h1>
@@ -125,45 +117,55 @@ export default function Page() {
                     </PieChart>
                 </div>
             </div>
+            <h1 className="text-2xl font-bold text-center pt-8">Targets Hit</h1>
             <div className="flex flex-col lg:flex-row px-8">
                 <table className="mx-auto bg-white border border-gray-300 shadow rounded-lg overflow-hidden">
                     <thead className="bg-blue-500">
                         <tr>
-                            <th className="py-4 px-24 border-b text-white">Targets Hit</th>
+                            <th scope="col" className="py-4 px-24 border-b text-white">
+                                Target Name
+                            </th>
+                            <th scope="col" className="py-4 px-24 border-b text-white">
+                                Description
+                            </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {targetsHit && targetsHit.map((target, index) => (
+                    <tbody className="bg-blue-500">
+                        {targetsHitNameList && targetsHitDescriptionList && targetsHitNameList.map((name, index) => (
                             <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                                <td className="py-4 px-4 border-b text-center">{target}</td>
+                                <td className="py-4 px-4 border-b font-bold text-center">
+                                    {name}
+                                </td>
+                                <td className="py-4 px-4 border-b text-left">
+                                    {targetsHitDescriptionList[index]}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <h1 className="text-2xl font-bold text-center pt-8">Targets Missed</h1>
+            <div className="flex flex-col lg:flex-row px-8">
                 <table className="mx-auto bg-white border border-gray-300 shadow rounded-lg overflow-hidden">
                     <thead className="bg-blue-500">
                         <tr>
-                            <th className="py-4 px-24 border-b text-white">Targets Missed</th>
+                            <th scope="col" className="py-4 px-24 border-b text-white">
+                                Target Name
+                            </th>
+                            <th scope="col" className="py-4 px-24 border-b text-white">
+                                Description
+                            </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {targetsMissed && targetsMissed.map((target, index) => (
+                    <tbody className="bg-blue-500">
+                        {targetsMissedNameList && targetsMissedDescriptionList && targetsMissedNameList.map((name, index) => (
                             <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                                <td className="py-4 px-4 border-b text-center">{target}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <table className="mx-auto bg-white border border-gray-300 shadow rounded-lg overflow-hidden">
-                    <thead className="bg-blue-500">
-                        <tr>
-                            <th className="py-4 px-24 border-b text-white">Tips Given</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tips && tips.map((tip, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                                <td className="py-2 px-4 border-b text-center">{tip}</td>
+                                <td className="py-4 px-4 border-b font-bold text-center">
+                                    {name}
+                                </td>
+                                <td className="py-4 px-4 border-b text-left">
+                                    {targetsMissedDescriptionList[index]}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

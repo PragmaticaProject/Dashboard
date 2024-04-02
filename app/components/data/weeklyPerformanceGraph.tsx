@@ -7,7 +7,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 interface ChartData {
     name: string;
-    date: string;
+    date: string; // User-friendly date
+    sortableDate: string; // Sortable date format
     score: string;
     tokens: string;
 }
@@ -25,32 +26,28 @@ export default function WeeklyPerformanceGraph() {
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
-                        const newData: ChartData[] = [];
-
-                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
+                        const rawData: ChartData[] = Object.keys(snapshot.val()).map((activityKey: string) => {
                             const activity = snapshot.val()[activityKey];
     
                             const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
                             const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
     
-                            if (daysDiff < 8) {
-                                const activityLabel = activityDate.toLocaleString('default', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                });
-    
-                                newData.push({
-                                    name: activity['name'],
-                                    date: activityLabel,
-                                    score: activity['score'],
-                                    tokens: activity['tokensAdded']
-                                });
-                            }
+                            return {
+                                name: activity['name'],
+                                date: activityDate.toLocaleString('default', { month: 'short', day: 'numeric' }),
+                                sortableDate: activityDate.toISOString().substring(0, 10), // YYYY-MM-DD
+                                score: activity['score'],
+                                tokens: activity['tokensAdded']
+                            };
+                        }).filter(activity => {
+                            const daysDiff = Math.round((new Date().getTime() - new Date(activity.sortableDate).getTime()) / (1000 * 3600 * 24));
+                            return daysDiff < 8;
                         });
 
-                        newData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-                        setChartData(newData);
+                        // Sort rawData based on sortableDate
+                        const sortedData = rawData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
+
+                        setChartData(sortedData);
                     } else {
                         console.log("No data available");
                     }

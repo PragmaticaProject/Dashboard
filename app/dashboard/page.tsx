@@ -6,7 +6,7 @@ import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 import PerformanceGraph from "../components/data/performanceGraph";
 import Link from "next/link";
-import ActivitiesList from "../components/data/activitiesList";
+import AssignedActivitiesList from "../components/data/assignedActivitiesList";
 
 export default function Page() {
     const [name, setName] = useState();
@@ -83,7 +83,7 @@ export default function Page() {
                         <h1 className="text-xl font-bold text-center py-4">
                             Click on an activity to view its progression
                         </h1>
-                        <ActivitiesList />
+                        <AssignedActivitiesList />
                     </div>
                 </div>
             )}

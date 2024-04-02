@@ -9,6 +9,7 @@ import { firebaseApp } from './firebase';
 export default function Page() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   const handleLogin = () => {
@@ -24,6 +25,7 @@ export default function Page() {
       .catch((error) => {
         console.log("sign-in failed with error code: " + error.code);
         console.log(error.message);
+        setErrorMessage("Email or password is incorrect.");
       });
   };
 
@@ -75,7 +77,7 @@ export default function Page() {
               required
             />
           </div>
-
+          {errorMessage && <p className="text-red-500 pb-4">{errorMessage}</p>}
           <button
             type="button"
             className="bg-blue-500 hover:bg-blue-400  text-white px-4 py-2 rounded"

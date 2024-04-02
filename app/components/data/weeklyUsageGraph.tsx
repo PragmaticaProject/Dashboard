@@ -49,8 +49,8 @@ export default function WeeklyUsageGraph() {
                             const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
                             const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
 
-                            if (daysDiff < 7) {
-                                newData[6 - daysDiff].count += 1;
+                            if (daysDiff < 8) {
+                                newData[6 - daysDiff+1].count += 1;
                             }
                         });
 

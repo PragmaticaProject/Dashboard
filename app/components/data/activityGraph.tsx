@@ -4,10 +4,10 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 interface ChartData {
-  sessionId: string;
   activityId: string;
   date: string;
-  score: number;
+  score: string;
+  duration: string;
   targetsHit: number;
   targetsMissed: number;
 }
@@ -23,6 +23,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         <div className="custom-tooltip p-2 text-sm bg-white border rounded shadow-md">
           <p>{`Date: ${data.date}`}</p>
           <p>{`Score: ${data.score}`}</p>
+          <p>{`Duration (s): ${data.duration}`}</p>
           <p>{`Targets Hit: ${data.targetsHit}`}</p>
           <p>{`Targets Missed: ${data.targetsMissed}`}</p>
         </div>

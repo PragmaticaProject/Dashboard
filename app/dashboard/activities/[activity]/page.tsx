@@ -8,10 +8,10 @@ import ActivityGraph from '@/app/components/data/activityGraph';
 import ActivityTable from '@/app/components/data/activityTable';
 
 interface ChartData {
-    sessionId: string;
     activityId: string;
     date: string;
-    score: number;
+    score: string;
+    duration: string;
     targetsHit: number;
     targetsMissed: number;
 }
@@ -26,60 +26,47 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/users/${userId}/sessions`));
+                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
                         const newData: ChartData[] = [];
 
-                        Object.keys(snapshot.val()).forEach((sessionKey: string) => { // iterate through sessions
-                            const session = snapshot.val()[sessionKey];
-                            const activities = session['activities'] as Record<string, any>;
+                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
+                            if (activityKey.startsWith(activityName)) {
+                                const activity = snapshot.val()[activityKey];
+    
+                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                const activityLabel = activityDate.toLocaleString('default', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                });
 
-                            Object.keys(activities).forEach((activityKey: string) => { // iterate through activities
-                                const activity = activities[activityKey];
+                                var targetsHit = 0;
+                                var targetsMissed = 0;
+                                console.log("init targets hit: " + targetsHit);
+                                
+                                Object.keys(activity["targetsHit"]).forEach((target: string) => {
+                                    console.log("targets hit: " + targetsHit);
+                                    targetsHit += 1;
+                                });
 
-                                if (activityKey === activityName) {
-                                    const states = activity['states'] as Record<string, any>;
-                                    
-                                    const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                    const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                                    const activityLabel = activityDate.toLocaleString('default', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                    });
-
-                                    var activityTargetsHit = 0;
-                                    var activityTargetsMissed = 0;
-
-                                    Object.keys(states).forEach((stateKey: string) => {
-                                        const state = states[stateKey] as Record<string, any>;
-                                        const stateTags = state['stateTags'];
-
-                                        if (stateTags.includes("TargetHit")) {
-                                            activityTargetsHit += 1;
-                                        }
-
-                                        if (stateTags.includes("TargetMissed")) {
-                                            activityTargetsMissed += 1;
-                                        }
-                                    });
-
-                                    const activityScore = Math.round((activityTargetsHit / (activityTargetsHit + activityTargetsMissed)) * 100);
-                                    console.log("name: " + activityLabel + ", score: " + activityScore);
-                                    newData.push({
-                                        sessionId: sessionKey,
-                                        activityId: activityKey,
-                                        date: activityLabel,
-                                        score: activityScore,
-                                        targetsHit: activityTargetsHit,
-                                        targetsMissed: activityTargetsMissed
-                                    });
-                                }
-                            });
+                                Object.keys(activity["targetsMissed"]).forEach((target: string) => {
+                                    targetsMissed += 1;
+                                });
+    
+                                newData.push({
+                                    activityId: activityKey,
+                                    date: activityLabel,
+                                    score: activity["score"],
+                                    duration: activity["duration"],
+                                    targetsHit: targetsHit,
+                                    targetsMissed: targetsMissed
+                                });
+                            }
                         });
 
-                        // Set the newData array as the chartData state
                         setChartData(newData);
                     } else {
                         console.log("No data available");
@@ -101,6 +88,7 @@ export default function Page() {
         <div className="p-8 space-y-6">
             <div className="text-xl font-bold text-center">
                 <h1>{activityName}</h1>
+                <h1>Activity Details Coming Soon!</h1>
             </div>
             {chartData.length > 0 && <ActivityGraph chartData={chartData} />}
             {chartData.length > 0 && <ActivityTable chartData={chartData} />}
