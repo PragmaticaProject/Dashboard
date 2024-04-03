@@ -12,8 +12,6 @@ interface ChartData {
     date: string;
     score: string;
     duration: string;
-    targetsHit: number;
-    targetsMissed: number;
 }
 
 export default function Page() {
@@ -42,27 +40,12 @@ export default function Page() {
                                     month: 'short',
                                     day: 'numeric',
                                 });
-
-                                var targetsHit = 0;
-                                var targetsMissed = 0;
-                                console.log("init targets hit: " + targetsHit);
                                 
-                                Object.keys(activity["targetsHit"]).forEach((target: string) => {
-                                    console.log("targets hit: " + targetsHit);
-                                    targetsHit += 1;
-                                });
-
-                                Object.keys(activity["targetsMissed"]).forEach((target: string) => {
-                                    targetsMissed += 1;
-                                });
-    
                                 newData.push({
                                     activityId: activityKey,
                                     date: activityLabel,
                                     score: activity["score"],
-                                    duration: activity["duration"],
-                                    targetsHit: targetsHit,
-                                    targetsMissed: targetsMissed
+                                    duration: activity["duration"]
                                 });
                             }
                         });
@@ -88,7 +71,6 @@ export default function Page() {
         <div className="p-8 space-y-6">
             <div className="text-xl font-bold text-center">
                 <h1>{activityName}</h1>
-                <h1>Activity Details Coming Soon!</h1>
             </div>
             {chartData.length > 0 && <ActivityGraph chartData={chartData} />}
             {chartData.length > 0 && <ActivityTable chartData={chartData} />}

@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 export default function NavBar() {
     return (
@@ -32,6 +31,14 @@ export default function NavBar() {
                 >
                     <div className="text-md text-black">
                         <h1>Users</h1>
+                    </div>
+                </Link>
+                <Link 
+                className="flex py-2 px-8 justify-center hover:bg-gray-300 rounded-lg"
+                href="/dashboard/activityviewer"
+                >
+                    <div className="text-md text-black">
+                        <h1>Activity Viewer</h1>
                     </div>
                 </Link>
                 <Link 

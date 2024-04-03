@@ -8,8 +8,6 @@ interface ChartData {
   date: string;
   score: string;
   duration: string;
-  targetsHit: number;
-  targetsMissed: number;
 }
 
 interface ActivityGraphProps {
@@ -24,8 +22,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
           <p>{`Date: ${data.date}`}</p>
           <p>{`Score: ${data.score}`}</p>
           <p>{`Duration (s): ${data.duration}`}</p>
-          <p>{`Targets Hit: ${data.targetsHit}`}</p>
-          <p>{`Targets Missed: ${data.targetsMissed}`}</p>
         </div>
       );
     }

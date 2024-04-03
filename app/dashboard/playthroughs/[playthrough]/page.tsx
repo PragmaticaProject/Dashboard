@@ -7,7 +7,7 @@ import { firebaseAuth, database } from "@/app/firebase";import { PieChart, Pie, 
 
 export default function Page() {
     const activityId = useSearchParams().get('activityId');
-    const activityName = useSearchParams().get('activityName');
+    const activityName = activityId?.split('-')[0];
     const [activityStartDT, setActivityStartDT] = useState<string>();
     const [activityEndDT, setActivityEndDT] = useState<string>();
     const [activityScore, setActivityScore] = useState<string>();
