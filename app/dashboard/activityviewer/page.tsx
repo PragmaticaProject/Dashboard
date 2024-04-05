@@ -7,8 +7,11 @@ export default function Page() {
 
     const handleVideoChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const videoUrlMap = {
+            'Chatting With A Neighbor': 'https://www.youtube.com/embed/eA2ryzCbxAI',
             'Order A Burger': 'https://www.youtube.com/embed/gyYABXMGgFo',
             'Quiet Library 1': 'https://www.youtube.com/embed/bOxlhhjB8JQ',
+            'School Schedule': 'https://www.youtube.com/embed/d0CjcXdqUoQ',
+            'Supermarket': 'https://www.youtube.com/embed/FtCdeK2StZU',
             'Understanding Intentions': 'https://www.youtube.com/embed/TETYhIDraKc',
         };
         setSelectedVideo(videoUrlMap[event.target.value as keyof typeof videoUrlMap]);
@@ -22,8 +25,11 @@ export default function Page() {
                 onChange={handleVideoChange}
                 className="mb-4 text-center form-select appearance-none block w-1/2 px-4 py-4 bg-white border border-gray-700 border-2 bg-clip-padding bg-no-repeat rounded-xl transition ease-in-out m-0"
             >
+                <option className='font-sans'>Chatting With A Neighbor</option>
                 <option className='font-sans'>Order A Burger</option>
                 <option className='font-sans'>Quiet Library 1</option>
+                <option className='font-sans'>School Schedule</option>
+                <option className='font-sans'>Supermarket</option>
                 <option className='font-sans'>Understanding Intentions</option>
             </select>
             <div className="w-full max-w-4xl">
