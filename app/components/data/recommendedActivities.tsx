@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { ref, child, get } from "firebase/database";
 import { firebaseApp, firebaseAuth, database } from "@/app/firebase";
 
@@ -9,7 +9,7 @@ export default function RecommendedActivitiesList() {
   const app = firebaseApp;
   const auth = firebaseAuth;
   const dbRef = ref(database);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<string[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +22,7 @@ export default function RecommendedActivitiesList() {
                 if (snapshot.exists()) {
                     console.log("snapshot found.");
                     
-                    const newData = [];
+                    const newData: string[] = [];
                     Object.keys(snapshot.val()).forEach((orderKey: string) => {
                         const activity = snapshot.val()[orderKey];
                         newData.push(activity);
