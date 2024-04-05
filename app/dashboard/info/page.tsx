@@ -9,6 +9,7 @@ export default function Page() {
     const [email, setEmail] = useState();
     const [playMCAudio, setPlayMCAudio] = useState();
     const [playSpeakingAudio, setPlaySpeakingAudio] = useState();
+    const [showMenuAudioButtons, setShowMenuAudioButtons] = useState();
     const [showText, setShowText] = useState();
     const [showTips, setShowTips] = useState();
     const [useVoiceRecognition, setUseVoiceRecognition] = useState();
@@ -34,19 +35,22 @@ export default function Page() {
 
                         Object.keys(settings).forEach((settingsKey: string) => {
                             switch(settingsKey) {
-                                case "play MC audio":
+                                case "playMCAudio":
                                     setPlayMCAudio((settings[settingsKey]).toString());
                                     break;
-                                case "play speaking audio":
+                                case "playSpeakingAudio":
                                     setPlaySpeakingAudio((settings[settingsKey]).toString());
                                     break;
-                                case "show text":
+                                    case "showMenuAudioButtons":
+                                        setShowMenuAudioButtons((settings[settingsKey]).toString());
+                                        break;
+                                case "showText":
                                     setShowText((settings[settingsKey]).toString());
                                     break;
-                                case "show tips":
+                                case "showTips":
                                     setShowTips((settings[settingsKey]).toString());
                                     break;
-                                case "use voice recognition":
+                                case "useVoiceRecognition":
                                     setUseVoiceRecognition((settings[settingsKey]).toString());
                                     break;
                                 default:
@@ -76,15 +80,11 @@ export default function Page() {
                 <h1 className="text-4xl font-bold text-center">Personal Info</h1>
                 {(
                     <div className="p-8">
-                        <table className="table-auto">
+                        <table className="table-auto border-2 border-gray-700">
                             <tbody>
                                 <tr>
-                                    <td className="border px-4 py-2">Name:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Name:</td>
                                     <td className="border px-4 py-2">{name}</td>
-                                </tr>
-                                <tr>
-                                    <td className="border px-4 py-2">Email:</td>
-                                    <td className="border px-4 py-2">{email}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -95,26 +95,30 @@ export default function Page() {
                 <h1 className="text-4xl font-bold text-center">App Info</h1>
                 {(
                     <div className="p-8">
-                        <table className="table-auto">
+                        <table className="table-auto border-2 border-gray-700">
                             <tbody>
                                 <tr>
-                                    <td className="border px-4 py-2">Play MC Audio:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Play MC Audio:</td>
                                     <td className="border px-4 py-2">{playMCAudio}</td>
                                 </tr>
                                 <tr>
-                                    <td className="border px-4 py-2">Play Speaking Audio:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Play Speaking Audio:</td>
                                     <td className="border px-4 py-2">{playSpeakingAudio}</td>
                                 </tr>
                                 <tr>
-                                    <td className="border px-4 py-2">Show Text:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Show Menu Audio Buttons:</td>
+                                    <td className="border px-4 py-2">{showMenuAudioButtons}</td>
+                                </tr>
+                                <tr>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Show Text:</td>
                                     <td className="border px-4 py-2">{showText}</td>
                                 </tr>
                                 <tr>
-                                    <td className="border px-4 py-2">Show Tips:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Show Tips:</td>
                                     <td className="border px-4 py-2">{showTips}</td>
                                 </tr>
                                 <tr>
-                                    <td className="border px-4 py-2">Use Voice Recognition:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Use Voice Recognition:</td>
                                     <td className="border px-4 py-2">{useVoiceRecognition}</td>
                                 </tr>
                             </tbody>
@@ -126,18 +130,18 @@ export default function Page() {
                 <h1 className="text-4xl font-bold text-center">Token Info</h1>
                 {(
                     <div className="p-8">
-                        <table className="table-auto">
+                        <table className="table-auto border-2 border-gray-700">
                             <tbody>
                                 <tr>
-                                    <td className="border px-4 py-2">Total Tokens:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Total Tokens:</td>
                                     <td className="border px-4 py-2">{totalTokens}</td>
                                 </tr>
                                 <tr>
-                                    <td className="border px-4 py-2">Current Tokens:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Current Tokens:</td>
                                     <td className="border px-4 py-2">{currentTokens}</td>
                                 </tr>
                                 <tr>
-                                    <td className="border px-4 py-2">Used Tokens:</td>
+                                    <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Used Tokens:</td>
                                     <td className="border px-4 py-2">{usedTokens}</td>
                                 </tr>
                             </tbody>

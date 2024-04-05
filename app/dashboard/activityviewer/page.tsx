@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 
 export default function Page() {
     const [selectedVideo, setSelectedVideo] = useState('https://www.youtube.com/embed/NIYWhD4ZRl8');
 
-    const handleVideoChange = (event) => {
+    const handleVideoChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const videoUrlMap = {
             'Order A Burger': 'https://www.youtube.com/embed/gyYABXMGgFo',
             'Quiet Library 1': 'https://www.youtube.com/embed/bOxlhhjB8JQ',
             'Understanding Intentions': 'https://www.youtube.com/embed/TETYhIDraKc',
         };
-        setSelectedVideo(videoUrlMap[event.target.value]);
+        setSelectedVideo(videoUrlMap[event.target.value as keyof typeof videoUrlMap]);
     };
 
     return (

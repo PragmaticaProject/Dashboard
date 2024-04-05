@@ -22,7 +22,7 @@ export default function Page() {
         const fetchData = async () => {
             try {
                 const user = firebaseAuth.currentUser;
-                if (user) {
+                if (user && activityName) {
                     const userId = localStorage.getItem("currentUser");
                     const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
 

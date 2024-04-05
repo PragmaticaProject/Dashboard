@@ -7,8 +7,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 
 interface ChartData {
     name: string;
-    date: string; // User-friendly date
-    sortableDate: string; // Sortable date format
+    date: string;
+    sortableDate: string;
     score: string;
     tokens: string;
 }
@@ -35,7 +35,7 @@ export default function WeeklyPerformanceGraph() {
                             return {
                                 name: activity['name'],
                                 date: activityDate.toLocaleString('default', { month: 'short', day: 'numeric' }),
-                                sortableDate: activityDate.toISOString().substring(0, 10), // YYYY-MM-DD
+                                sortableDate: activityDate.toISOString().substring(0, 10),
                                 score: activity['score'],
                                 tokens: activity['tokensAdded']
                             };
@@ -44,9 +44,7 @@ export default function WeeklyPerformanceGraph() {
                             return daysDiff < 8;
                         });
 
-                        // Sort rawData based on sortableDate
                         const sortedData = rawData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
-
                         setChartData(sortedData);
                     } else {
                         console.log("No data available");
