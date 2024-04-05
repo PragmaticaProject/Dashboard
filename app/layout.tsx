@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import '@/app/ui/globals.css';
 import { openSans } from './ui/fonts';
-
-const inter = Inter({ subsets: ['latin'] })
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: 'Dashboard - Pragmatica VR Speech and Language Therapy',
@@ -17,7 +15,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={openSans.className}>{children}</body>
+      <head>
+        <title>Pragmatica - Virtual Reality Speech and Language Therapy Solution</title>
+      </head>
+      <body className={openSans.className}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
