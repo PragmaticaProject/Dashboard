@@ -22,7 +22,8 @@ export default function Page() {
             'Tutorial': 'https://www.youtube.com/embed/o4t2X4aYfR4',
             'Whats in the Box': 'https://www.youtube.com/embed/w74jir28h0M',
             'Cafe': 'https://www.youtube.com/embed/YhjX0h4A_BM',
-            'Chatting With A Friend': 'https://www.youtube.com/embed/rtfUbtkitcM'
+            'Chatting With A Friend': 'https://www.youtube.com/embed/rtfUbtkitcM',
+            'Giving Directions': 'https://www.youtube.com/embed/9mztWE3ddCA'
         };
         setSelectedVideo(videoUrlMap[event.target.value as keyof typeof videoUrlMap]);
     };
@@ -38,6 +39,7 @@ export default function Page() {
                 <option>Cafe</option>
                 <option>Chatting With A Neighbor</option>
                 <option>Chatting With A Friend</option>
+                <option>Giving Directions</option>
                 <option>Initiating A Conversation</option>
                 <option>Navigating A Bus Route</option>
                 <option>Order A Burger</option>
