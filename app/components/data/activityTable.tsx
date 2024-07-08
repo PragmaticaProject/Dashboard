@@ -22,7 +22,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ chartData }) => {
                     <tr className="bg-gray-200">
                         <th className="py-2 px-4 border-b">Date</th>
                         <th className="py-2 px-4 border-b">Score</th>
-                        <th className="py-2 px-4 border-b">Duration</th>
+                        <th className="py-2 px-4 border-b">Duration (s)</th>
                         <th className="py-2 px-4 border-b">Details</th>
                     </tr>
                 </thead>

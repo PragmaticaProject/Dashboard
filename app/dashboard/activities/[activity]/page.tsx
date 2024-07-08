@@ -6,6 +6,7 @@ import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 import ActivityGraph from '@/app/components/data/activityGraph';
 import ActivityTable from '@/app/components/data/activityTable';
+import ActivityDurationGraph from '@/app/components/data/activityDurationGraph';
 
 interface ChartData {
     activityId: string;
@@ -69,10 +70,17 @@ export default function Page() {
 
     return (
         <div className="p-8 space-y-6">
-            <div className="text-xl font-bold text-center">
+            <div className="text-4xl font-bold text-center">
                 <h1>{activityName}</h1>
             </div>
+            <div className="text-xl font-bold text-center">
+                <h1>Activity Scores</h1>
+            </div>
             {chartData.length > 0 && <ActivityGraph chartData={chartData} />}
+            <div className="text-xl font-bold text-center">
+                <h1>Activity Durations</h1>
+            </div>
+            {chartData.length > 0 && <ActivityDurationGraph chartData={chartData} />}
             {chartData.length > 0 && <ActivityTable chartData={chartData} />}
         </div>
     );

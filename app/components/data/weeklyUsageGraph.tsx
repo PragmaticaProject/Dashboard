@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 
 interface ChartData {
     day: string;
     count: number;
 } 
-
-
 
 export default function WeeklyUsageGraph() {
     const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -37,7 +35,7 @@ export default function WeeklyUsageGraph() {
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
 
-                        const newData: ChartData[] = labels.map((label, index) => ({
+                        const newData: ChartData[] = labels.map((label) => ({
                             day: label,
                             count: 0,
                         }));
@@ -47,10 +45,10 @@ export default function WeeklyUsageGraph() {
 
                             const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
                             const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+                            const daysDiff = Math.floor((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
 
-                            if (daysDiff < 8) {
-                                newData[6 - daysDiff+1].count += 1;
+                            if (daysDiff < 7) {
+                                newData[6 - daysDiff].count += 1;
                             }
                         });
 
@@ -74,11 +72,13 @@ export default function WeeklyUsageGraph() {
             <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={chartData}>
                     <XAxis dataKey="day" />
-                    <YAxis />
+                    <YAxis>
+                        <Label value="# of activities" angle={-90} position="inside" />
+                    </YAxis>
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="count" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="count" stroke="#4fb9af" activeDot={{ r: 8 }} />
                 </LineChart>
             </ResponsiveContainer>
         </div>

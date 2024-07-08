@@ -36,8 +36,8 @@ export default function Page() {
                         setActivityScore(activity['score']);
                         setActivityDuration(activity['duration']);
 
-                        const targetsHit = activity['targetsHit'];
-                        const targetsMissed = activity['targetsMissed'];
+                        const targetsHit = activity['targetsHit'] || {};
+                        const targetsMissed = activity['targetsMissed'] || {};
                         const tempTargetsHitNameList: string[] = [];
                         const tempTargetsHitDescriptionList: string[] = [];
                         const tempTargetsMissedNameList: string[] = [];

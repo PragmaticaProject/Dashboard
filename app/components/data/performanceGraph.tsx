@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 
 interface ChartData {
     name: string;
@@ -68,7 +68,9 @@ export default function PerformanceGraph() {
                 <ResponsiveContainer width="100%" height={250}>
                     <LineChart data={chartData}>
                         <XAxis dataKey="date" />
-                        <YAxis />
+                        <YAxis>
+                            <Label value="Score" angle={-90} position="insideLeft" />
+                        </YAxis>
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip content={<CustomTooltip />} />
                         <Legend />

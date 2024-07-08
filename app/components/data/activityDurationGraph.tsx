@@ -29,21 +29,21 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return null;
 };
 
-const ActivityGraph: React.FC<ActivityGraphProps> = ({ chartData }) => {
+const ActivityDurationGraph: React.FC<ActivityGraphProps> = ({ chartData }) => {
     return (
         <ResponsiveContainer width="100%" height={250}>
             <LineChart data={chartData}>
                 <XAxis dataKey="date" />
                 <YAxis>
-                        <Label value="Score" angle={-90} position="insideLeft" />
+                        <Label value="Duration (seconds)" angle={-90} position="insideBottomLeft" />
                     </YAxis>
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend />
-                <Line type="monotone" dataKey="score" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="duration" stroke="#4fb9af" activeDot={{ r: 8 }} />
             </LineChart>
         </ResponsiveContainer>
     );
 };
 
-export default ActivityGraph;
+export default ActivityDurationGraph;
