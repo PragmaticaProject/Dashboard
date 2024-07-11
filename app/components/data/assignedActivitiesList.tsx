@@ -9,7 +9,8 @@ export default function AssignedActivitiesList() {
   const app = firebaseApp;
   const auth = firebaseAuth;
   const dbRef = ref(database);
-  const [data, setData] = useState(null);
+  const [assignedActivities, setAssignedActivities] = useState<Record<string, any> | null>(null);
+  const [otherActivities, setOtherActivities] = useState<Record<string, any>>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,13 +18,31 @@ export default function AssignedActivitiesList() {
         const user = auth.currentUser;
         if (user) {
           const userId = localStorage.getItem("currentUser");
-          const snapshot = await get(child(dbRef, `prod/users/${userId}/activities/assignedActivities`));
+          const assignedSnapshot = await get(child(dbRef, `prod/users/${userId}/activities/assignedActivities`));
 
-          if (snapshot.exists()) {
-            console.log("snapshot found.");
-            setData(snapshot.val());
+          if (assignedSnapshot.exists()) {
+            console.log("Assigned activities snapshot found.");
+            setAssignedActivities(assignedSnapshot.val());
           } else {
-            console.log("No data available");
+            console.log("No assigned activities available");
+          }
+
+          const allActivitiesSnapshot = await get(child(dbRef, `prod/activities/collection`));
+
+          if (allActivitiesSnapshot.exists()) {
+            console.log("All activities snapshot found.");
+            const allActivities: Record<string, any> = allActivitiesSnapshot.val();
+
+            const assignedKeys = assignedSnapshot.exists() ? Object.keys(assignedSnapshot.val()) : [];
+            const filteredOtherActivities = Object.keys(allActivities)
+              .filter(key => !assignedKeys.includes(key))
+              .reduce((obj: Record<string, any>, key: string) => {
+                obj[key] = allActivities[key];
+                return obj;
+              }, {});
+            setOtherActivities(filteredOtherActivities);
+          } else {
+            console.log("No activities available");
           }
         } else {
           console.log("user not found.");
@@ -36,21 +55,49 @@ export default function AssignedActivitiesList() {
     fetchData();
   }, []);
 
-  const handleDelete = async (deletedActivityKey) => {
+  const handleDelete = async (deletedActivityKey: string) => {
     try {
       const user = auth.currentUser;
       const userId = localStorage.getItem("currentUser");
 
       if (user) {
-        const updatedData = { ...data };
-        delete updatedData[deletedActivityKey];
+        const updatedAssignedActivities = { ...assignedActivities } as Record<string, any>;
+        const removedActivity = updatedAssignedActivities[deletedActivityKey];
+        delete updatedAssignedActivities[deletedActivityKey];
 
         const updates = {
           [`prod/users/${userId}/activities/assignedActivities/${deletedActivityKey}`]: null,
         };
 
         await update(ref(database), updates);
-        setData(updatedData);
+        setAssignedActivities(updatedAssignedActivities);
+        setOtherActivities(prev => ({ ...prev, [deletedActivityKey]: removedActivity }));
+      } else {
+        console.log("user not found.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAdd = async (activityKey: string) => {
+    try {
+      const user = auth.currentUser;
+      const userId = localStorage.getItem("currentUser");
+
+      if (user) {
+        const activityToAdd = otherActivities[activityKey];
+        const updatedAssignedActivities = { ...assignedActivities, [activityKey]: activityToAdd };
+        const updatedOtherActivities = { ...otherActivities };
+        delete updatedOtherActivities[activityKey];
+
+        const updates = {
+          [`prod/users/${userId}/activities/assignedActivities/${activityKey}`]: activityToAdd,
+        };
+
+        await update(ref(database), updates);
+        setAssignedActivities(updatedAssignedActivities);
+        setOtherActivities(updatedOtherActivities);
       } else {
         console.log("user not found.");
       }
@@ -60,36 +107,78 @@ export default function AssignedActivitiesList() {
   };
 
   return (
-    <div className="mx-auto max-w-lg">
-      <h1 className="text-center text-2xl font-bold pb-8">Assigned Activities</h1>
-      {data && (
-        <table className="w-full bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-          <thead className="bg-blue-500">
-            <tr>
-              <th className="py-4 pl-4 text-center text-white">Activity</th>
-              <th className="py-4 pl-4 text-center text-white"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(data).map(([key, value]) => (
-              <tr key={key} className="border-b">
-                <td className="py-4 px-4 text-center hover:bg-gray-100">
-                  <Link href={{ pathname: `/dashboard/activities/${encodeURIComponent(key)}`, query: { activityName: key } }}>
-                    <div>{key}</div>
-                  </Link>
-                </td>
-                <td className="py-4 px-4 text-center">
-                  <button 
-                    onClick={() => handleDelete(key)} 
-                    className="px-2 py-1 bg-red-500 text-white rounded">
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div>
+      <div className="text-center">
+        <h1 className="text-center text-4xl font-bold pb-8">Activities</h1>
+        <h1>The assigned activities list show which activities are provided to the user. You can add or remove activities to choose which activities the user can play (they will be added to the bottom of the other list).</h1>
+      </div>
+      <div className="flex flex-col lg:flex-row justify-between space-y-6 lg:space-y-0 space-x-0 lg:space-x-12">
+        <div className="w-1/2 p-4">
+          <h1 className="text-center text-2xl font-bold pb-8">Assigned Activities</h1>
+          {assignedActivities && (
+            <table className="w-full bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+              <thead className="bg-blue-500">
+                <tr>
+                  <th className="py-4 pl-4 text-center text-white">Activity</th>
+                  <th className="py-4 pl-4 text-center text-white"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(assignedActivities).map(([key, value]) => (
+                  <tr key={key} className="border-b">
+                    <td className="py-4 px-4 text-center hover:bg-gray-100">
+                      <Link href={{ pathname: `/dashboard/activities/${encodeURIComponent(key)}`, query: { activityName: key } }}>
+                        <div>{key}</div>
+                      </Link>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <button 
+                        onClick={() => handleDelete(key)} 
+                        className="px-2 py-1 bg-red-500 text-white rounded">
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+        
+        <div className="w-1/2 p-4">
+          <h1 className="text-center text-2xl font-bold pb-8">Other Activities</h1>
+          {Object.keys(otherActivities).length > 0 ? (
+            <table className="w-full bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
+              <thead className="bg-blue-500">
+                <tr>
+                  <th className="py-4 pl-4 text-center text-white">Activity</th>
+                  <th className="py-4 pl-4 text-center text-white"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(otherActivities).map(([key, value]) => (
+                  <tr key={key} className="border-b">
+                    <td className="py-4 px-4 text-center hover:bg-gray-100">
+                      <Link href={{ pathname: `/dashboard/activities/${encodeURIComponent(key)}`, query: { activityName: key } }}>
+                        <div>{key}</div>
+                      </Link>
+                    </td>
+                    <td className="py-4 px-4 text-center">
+                      <button 
+                        onClick={() => handleAdd(key)} 
+                        className="px-2 py-1 bg-green-500 text-white rounded">
+                        Add
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="text-center">No other activities available</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

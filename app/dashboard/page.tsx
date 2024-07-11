@@ -80,9 +80,6 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="w-full">
-                        <h1 className="text-xl font-bold text-center py-4">
-                            Click on an activity to view its progression
-                        </h1>
                         <AssignedActivitiesList />
                     </div>
                 </div>
