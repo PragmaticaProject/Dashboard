@@ -10,7 +10,7 @@ interface ChartData {
     count: number;
 }
 
-export default function YearlyUsageGraph() {
+export default function YearlyHoursPlayedGraph() {
     const labels = ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Month 7", "Month 8", "Month 9", "Month 10", "Month 11", "Month 12"];
     const [chartData, setChartData] = useState<ChartData[]>([]);
 
@@ -39,29 +39,29 @@ export default function YearlyUsageGraph() {
                             const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
                             
                             if (daysDiff < 31) {
-                                newData[11].count += 1;
+                                newData[11].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 59) {
-                                newData[10].count += 1;
+                                newData[10].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 90) {
-                                newData[9].count += 1;
+                                newData[9].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 120) {
-                                newData[8].count += 1;
+                                newData[8].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 151) {
-                                newData[7].count += 1;
+                                newData[7].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 181) {
-                                newData[6].count += 1;
+                                newData[6].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 212) {
-                                newData[5].count += 1;
+                                newData[5].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 243) {
-                                newData[4].count += 1;
+                                newData[4].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 273) {
-                                newData[3].count += 1;
+                                newData[3].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 304) {
-                                newData[2].count += 1;
+                                newData[2].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 334) {
-                                newData[1].count += 1;
+                                newData[1].count += Math.round(parseInt(activity["duration"]) / 60);
                             } else if (daysDiff < 365) {
-                                newData[0].count += 1;
+                                newData[0].count += Math.round(parseInt(activity["duration"]) / 60);
                             }
                         });
 
@@ -86,7 +86,7 @@ export default function YearlyUsageGraph() {
                 <LineChart data={chartData}>
                     <XAxis dataKey="date" />
                     <YAxis>
-                        <Label value="# of activities" angle={-90} position="insideLeft" />
+                        <Label value="# of hours" angle={-90} position="insideLeft" />
                     </YAxis>
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />

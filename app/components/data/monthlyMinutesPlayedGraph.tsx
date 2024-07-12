@@ -10,8 +10,8 @@ interface ChartData {
     count: number;
 }
 
-export default function YearlyUsageGraph() {
-    const labels = ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Month 7", "Month 8", "Month 9", "Month 10", "Month 11", "Month 12"];
+export default function MonthlyMinutesPlayedGraph() {
+    const labels = ["Week 1", "Week 2", "Week 3", "Week 4"];
     const [chartData, setChartData] = useState<ChartData[]>([]);
 
     useEffect(() => {
@@ -37,31 +37,15 @@ export default function YearlyUsageGraph() {
                             const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
                             const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
                             const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-                            
-                            if (daysDiff < 31) {
-                                newData[11].count += 1;
-                            } else if (daysDiff < 59) {
-                                newData[10].count += 1;
-                            } else if (daysDiff < 90) {
-                                newData[9].count += 1;
-                            } else if (daysDiff < 120) {
-                                newData[8].count += 1;
-                            } else if (daysDiff < 151) {
-                                newData[7].count += 1;
-                            } else if (daysDiff < 181) {
-                                newData[6].count += 1;
-                            } else if (daysDiff < 212) {
-                                newData[5].count += 1;
-                            } else if (daysDiff < 243) {
-                                newData[4].count += 1;
-                            } else if (daysDiff < 273) {
-                                newData[3].count += 1;
-                            } else if (daysDiff < 304) {
-                                newData[2].count += 1;
-                            } else if (daysDiff < 334) {
-                                newData[1].count += 1;
-                            } else if (daysDiff < 365) {
-                                newData[0].count += 1;
+
+                            if (daysDiff < 8) {
+                                newData[3].count += parseInt(activity["duration"]);
+                            } else if (daysDiff < 15) {
+                                newData[2].count += parseInt(activity["duration"]);
+                            } else if (daysDiff < 22) {
+                                newData[1].count += parseInt(activity["duration"]);
+                            } else if (daysDiff < 31) {
+                                newData[0].count += parseInt(activity["duration"]);
                             }
                         });
 
@@ -86,7 +70,7 @@ export default function YearlyUsageGraph() {
                 <LineChart data={chartData}>
                     <XAxis dataKey="date" />
                     <YAxis>
-                        <Label value="# of activities" angle={-90} position="insideLeft" />
+                        <Label value="# of minutes" angle={-90} position="insideLeft" />
                     </YAxis>
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
