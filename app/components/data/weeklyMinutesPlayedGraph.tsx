@@ -78,7 +78,7 @@ export default function WeeklyMinutesPlayedGraph() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="count" stroke="#4fb9af" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="count" stroke="#FFA500" activeDot={{ r: 8 }} />
                 </LineChart>
             </ResponsiveContainer>
         </div>
