@@ -89,7 +89,7 @@ export default function Page() {
                         <td className="py-2 px-4 text-center hover:bg-gray-100">
                         <Link href={{ pathname: `/dashboard/playthroughs/${encodeURIComponent(key)}`, 
                             query: { activityId: key, activityName: value } }}>
-                            <div>{value}</div>
+                            <div>{value.replace(/([A-Z0-9])/g, ' $1').trim()}</div>
                         </Link>
                         </td>
                     </tr>

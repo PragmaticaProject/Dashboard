@@ -106,6 +106,10 @@ export default function AssignedActivitiesList() {
     }
   };
 
+  const displayActivity = (key: string) => {
+    return key.replace(/([A-Z0-9])/g, ' $1').trim();
+  };
+
   return (
     <div>
       <div className="text-center">
@@ -128,7 +132,7 @@ export default function AssignedActivitiesList() {
                   <tr key={key} className="border-b">
                     <td className="py-4 px-4 text-center hover:bg-gray-100">
                       <Link href={{ pathname: `/dashboard/activities/${encodeURIComponent(key)}`, query: { activityName: key } }}>
-                        <div>{key}</div>
+                        <div>{key.replace(/([A-Z0-9])/g, ' $1').trim()}</div>
                       </Link>
                     </td>
                     <td className="py-4 px-4 text-center">
@@ -160,7 +164,7 @@ export default function AssignedActivitiesList() {
                   <tr key={key} className="border-b">
                     <td className="py-4 px-4 text-center hover:bg-gray-100">
                       <Link href={{ pathname: `/dashboard/activities/${encodeURIComponent(key)}`, query: { activityName: key } }}>
-                        <div>{key}</div>
+                        <div>{key.replace(/([A-Z0-9])/g, ' $1').trim()}</div>
                       </Link>
                     </td>
                     <td className="py-4 px-4 text-center">

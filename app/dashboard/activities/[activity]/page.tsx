@@ -71,7 +71,7 @@ export default function Page() {
     return (
         <div className="p-8 space-y-6">
             <div className="text-4xl font-bold text-center">
-                <h1>{activityName}</h1>
+                <h1>{activityName?.replace(/([A-Z0-9])/g, ' $1').trim()}</h1>
             </div>
             <div className="text-xl font-bold text-center">
                 <h1>Activity Scores</h1>

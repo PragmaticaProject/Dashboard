@@ -85,7 +85,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       const data = payload[0].payload;
       return (
         <div className="custom-tooltip p-2 text-sm bg-white border rounded shadow-md">
-          <p>{`Name: ${data.name}`}</p>
+          <p>{`Name: ${data.name.replace(/([A-Z0-9])/g, ' $1').trim()}`}</p>
           <p>{`Date: ${data.date}`}</p>
           <p>{`Score: ${data.score}`}</p>
           <p>{`Tokens Added: ${data.tokens}`}</p>

@@ -102,7 +102,7 @@ export default function Page() {
             <div className="flex flex-col md:flex-row">
                 <div className="flex flex-col mx-auto justify-center px-16 rounded-lg shadow-xl">
                     <h1 className="text-center text-2xl font-bold mb-8">Activity Details</h1>
-                    <h1 className="text-center text-lg mb-2">Activity Name: {activityName}</h1>
+                    <h1 className="text-center text-lg mb-2">Activity Name: {activityName?.replace(/([A-Z0-9])/g, ' $1').trim()}</h1>
                     <h1 className="text-center text-lg mb-2">Activity Start: {activityStartDT}</h1>
                     <h1 className="text-center text-lg mb-2">Activity End: {activityEndDT}</h1>
                     <h1 className="text-center text-lg mb-2">Activity Duration: {activityDuration}</h1>
