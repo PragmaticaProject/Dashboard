@@ -7,7 +7,10 @@ export default function Page() {
 
     const handleVideoChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const videoUrlMap = {
+            'Cafe 2': 'https://www.youtube.com/embed/280lBt0vSU8',
+            'Cafe 3': 'https://www.youtube.com/embed/fRnMuJ-VZRo',
             'Chatting With A Neighbor': 'https://www.youtube.com/embed/eA2ryzCbxAI',
+            'Dental Office': 'https://www.youtube.com/embed/LSs18Da5DzE',
             'Order A Burger': 'https://www.youtube.com/embed/gyYABXMGgFo',
             'Quiet Library 1': 'https://www.youtube.com/embed/bOxlhhjB8JQ',
             'School Schedule': 'https://www.youtube.com/embed/d0CjcXdqUoQ',
@@ -16,6 +19,7 @@ export default function Page() {
             'Initiating A Conversation': 'https://www.youtube.com/embed/PUQnEpWPB90',
             'Navigating A Bus Route': 'https://www.youtube.com/embed/50pR-EpaBxg',
             'Order A Combo': 'https://www.youtube.com/embed/dUjhXTCEapI',
+            'Pharmacy': 'https://www.youtube.com/embed/Ltn8s11Ktzc',
             'Prosody': 'https://www.youtube.com/embed/NhevB9eq6t0',
             'Quiet Library 2': 'https://www.youtube.com/embed/uVcToHevNcs',
             'Toy Taken Away': 'https://www.youtube.com/embed/lv4GuNYqUGw',
