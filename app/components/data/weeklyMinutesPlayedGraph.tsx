@@ -40,19 +40,21 @@ export default function WeeklyMinutesPlayedGraph() {
                             count: 0,
                         }));
 
-                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
-                            const activity = snapshot.val()[activityKey];
-
-                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const daysDiff = Math.floor((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-
-                            if (daysDiff < 7) {
-                                newData[6 - daysDiff].count += parseInt(activity["duration"]);
-                            }
+                        Object.keys(snapshot.val()).forEach((activityName: string) => {
+                            Object.keys(snapshot.val()[activityName]).forEach((activityKey: string) => {
+                                const activity = snapshot.val()[activityName][activityKey];
+    
+                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                const daysDiff = Math.floor((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+    
+                                if (daysDiff < 7) {
+                                    newData[6 - daysDiff].count += parseInt(activity["duration"]);
+                                }
+                            });
+    
+                            setChartData(newData);
                         });
-
-                        setChartData(newData);
                     } else {
                         console.log("No data available");
                     }

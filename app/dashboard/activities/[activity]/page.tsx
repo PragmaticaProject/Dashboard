@@ -25,30 +25,29 @@ export default function Page() {
                 const user = firebaseAuth.currentUser;
                 if (user && activityName) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
+                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}/${activityName}`));
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
                         const newData: ChartData[] = [];
 
                         Object.keys(snapshot.val()).forEach((activityKey: string) => {
-                            if (activityKey.startsWith(activityName)) {
-                                const activity = snapshot.val()[activityKey];
-    
-                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                                const activityLabel = activityDate.toLocaleString('default', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                });
-                                
-                                newData.push({
-                                    activityId: activityKey,
-                                    date: activityLabel,
-                                    score: activity["score"],
-                                    duration: activity["duration"]
-                                });
-                            }
+
+                            const activity = snapshot.val()[activityKey];
+
+                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                            const activityLabel = activityDate.toLocaleString('default', {
+                                month: 'short',
+                                day: 'numeric',
+                            });
+                            
+                            newData.push({
+                                activityId: activityKey,
+                                date: activityLabel,
+                                score: activity["score"],
+                                duration: activity["duration"]
+                            });
                         });
 
                         setChartData(newData);

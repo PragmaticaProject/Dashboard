@@ -31,25 +31,27 @@ export default function MonthlyMinutesPlayedGraph() {
                             count: 0,
                         }));
 
-                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
-                            const activity = snapshot.val()[activityKey];
-
-                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-
-                            if (daysDiff < 8) {
-                                newData[3].count += parseInt(activity["duration"]);
-                            } else if (daysDiff < 15) {
-                                newData[2].count += parseInt(activity["duration"]);
-                            } else if (daysDiff < 22) {
-                                newData[1].count += parseInt(activity["duration"]);
-                            } else if (daysDiff < 31) {
-                                newData[0].count += parseInt(activity["duration"]);
-                            }
+                        Object.keys(snapshot.val()).forEach((activityName: string) => {
+                            Object.keys(snapshot.val()[activityName]).forEach((activityKey: string) => {
+                                const activity = snapshot.val()[activityName][activityKey];
+    
+                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+    
+                                if (daysDiff < 8) {
+                                    newData[3].count += parseInt(activity["duration"]);
+                                } else if (daysDiff < 15) {
+                                    newData[2].count += parseInt(activity["duration"]);
+                                } else if (daysDiff < 22) {
+                                    newData[1].count += parseInt(activity["duration"]);
+                                } else if (daysDiff < 31) {
+                                    newData[0].count += parseInt(activity["duration"]);
+                                }
+                            });
+    
+                            setChartData(newData);
                         });
-
-                        setChartData(newData);
                     } else {
                         console.log("No data available");
                     }

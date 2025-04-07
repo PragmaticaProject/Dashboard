@@ -27,27 +27,29 @@ export default function PerformanceGraph() {
                         console.log("snapshot found.");
                         const newData: ChartData[] = [];
 
-                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
-                            const activity = snapshot.val()[activityKey];
-
-                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const activityLabel = activityDate.toLocaleString('default', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
+                        Object.keys(snapshot.val()).forEach((activityName: string) => {
+                            Object.keys(snapshot.val()[activityName]).forEach((activityKey: string) => {
+                                const activity = snapshot.val()[activityName][activityKey];
+    
+                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                const activityLabel = activityDate.toLocaleString('default', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                });
+    
+                                newData.push({
+                                    name: activity['name'],
+                                    date: activityLabel,
+                                    score: activity['score'],
+                                    tokens: activity['tokensAdded']
+                                });
                             });
-
-                            newData.push({
-                                name: activity['name'],
-                                date: activityLabel,
-                                score: activity['score'],
-                                tokens: activity['tokensAdded']
-                            });
+    
+                            newData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                            setChartData(newData);
                         });
-
-                        newData.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-                        setChartData(newData);
                     } else {
                         console.log("No data available");
                     }

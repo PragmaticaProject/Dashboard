@@ -26,26 +26,37 @@ export default function WeeklyPerformanceGraph() {
 
                     if (snapshot.exists()) {
                         console.log("snapshot found.");
-                        const rawData: ChartData[] = Object.keys(snapshot.val()).map((activityKey: string) => {
-                            const activity = snapshot.val()[activityKey];
-    
-                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-    
-                            return {
-                                name: activity['name'],
-                                date: activityDate.toLocaleString('default', { month: 'short', day: 'numeric' }),
-                                sortableDate: activityDate.toISOString().substring(0, 10),
-                                score: activity['score'],
-                                tokens: activity['tokensAdded']
-                            };
-                        }).filter(activity => {
-                            const daysDiff = Math.round((new Date().getTime() - new Date(activity.sortableDate).getTime()) / (1000 * 3600 * 24));
-                            return daysDiff < 8;
+                        
+                        const newData: ChartData[] = [];
+
+                        Object.keys(snapshot.val()).forEach((activityName: string) => {
+                            const rawData: ChartData[] = Object.keys(snapshot.val()[activityName]).map((activityKey: string) => {
+                                const activity = snapshot.val()[activityName][activityKey];
+        
+                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        
+                                return {
+                                    name: activity['name'],
+                                    date: activityDate.toLocaleString('default', { month: 'short', day: 'numeric' }),
+                                    sortableDate: activityDate.toISOString().substring(0, 10),
+                                    score: activity['score'],
+                                    tokens: activity['tokensAdded']
+                                };
+                            }).filter(activity => {
+                                const daysDiff = Math.round((new Date().getTime() - new Date(activity.sortableDate).getTime()) / (1000 * 3600 * 24));
+                                return daysDiff < 8;
+                            });
+
+                            
+                            const sortedData = rawData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
+                            sortedData.forEach(data => console.log(data.sortableDate));
+                            //setChartData(sortedData);
+                            newData.push(...sortedData);
                         });
 
-                        const sortedData = rawData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
-                        setChartData(sortedData);
+                        newData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
+                        setChartData(newData);
                     } else {
                         console.log("No data available");
                     }

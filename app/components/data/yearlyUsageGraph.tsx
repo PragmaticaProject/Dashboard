@@ -31,41 +31,43 @@ export default function YearlyUsageGraph() {
                             count: 0,
                         }));
 
-                        Object.keys(snapshot.val()).forEach((activityKey: string) => {
-                            const activity = snapshot.val()[activityKey];
-
-                            const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                            const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-                            
-                            if (daysDiff < 31) {
-                                newData[11].count += 1;
-                            } else if (daysDiff < 59) {
-                                newData[10].count += 1;
-                            } else if (daysDiff < 90) {
-                                newData[9].count += 1;
-                            } else if (daysDiff < 120) {
-                                newData[8].count += 1;
-                            } else if (daysDiff < 151) {
-                                newData[7].count += 1;
-                            } else if (daysDiff < 181) {
-                                newData[6].count += 1;
-                            } else if (daysDiff < 212) {
-                                newData[5].count += 1;
-                            } else if (daysDiff < 243) {
-                                newData[4].count += 1;
-                            } else if (daysDiff < 273) {
-                                newData[3].count += 1;
-                            } else if (daysDiff < 304) {
-                                newData[2].count += 1;
-                            } else if (daysDiff < 334) {
-                                newData[1].count += 1;
-                            } else if (daysDiff < 365) {
-                                newData[0].count += 1;
-                            }
+                        Object.keys(snapshot.val()).forEach((activityName: string) => {
+                            Object.keys(snapshot.val()[activityName]).forEach((activityKey: string) => {
+                                const activity = snapshot.val()[activityName][activityKey];
+    
+                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                const daysDiff = Math.round((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+                                
+                                if (daysDiff < 31) {
+                                    newData[11].count += 1;
+                                } else if (daysDiff < 59) {
+                                    newData[10].count += 1;
+                                } else if (daysDiff < 90) {
+                                    newData[9].count += 1;
+                                } else if (daysDiff < 120) {
+                                    newData[8].count += 1;
+                                } else if (daysDiff < 151) {
+                                    newData[7].count += 1;
+                                } else if (daysDiff < 181) {
+                                    newData[6].count += 1;
+                                } else if (daysDiff < 212) {
+                                    newData[5].count += 1;
+                                } else if (daysDiff < 243) {
+                                    newData[4].count += 1;
+                                } else if (daysDiff < 273) {
+                                    newData[3].count += 1;
+                                } else if (daysDiff < 304) {
+                                    newData[2].count += 1;
+                                } else if (daysDiff < 334) {
+                                    newData[1].count += 1;
+                                } else if (daysDiff < 365) {
+                                    newData[0].count += 1;
+                                }
+                            });
+    
+                            setChartData(newData);
                         });
-
-                        setChartData(newData);
                     } else {
                         console.log("No data available");
                     }
