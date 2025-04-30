@@ -43,47 +43,46 @@ export default function Page() {
                         let totRevenue = 0;
 
                         Object.keys(snapshot.val()).forEach((userKey: string) => {
-                            console.log(userKey);
 
                             const user = snapshot.val()[userKey];
-                            const email = user['email'];
-                            const subscription = user['subscription'];
 
-                            if (subscription === 'basic') {
-                                basic++;
-                            } else if (subscription === 'premium') {
-                                premium++;
-                            }
+                            if (user['role'] !== 'internal') {
+                                const email = user['email'];
+                                const subscription = user['subscription'];
 
-                            const [month, day, year] = user['subscription_time_end'].substring(0, 10).split(':');
-                            const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const lastDate = dateObj.toLocaleString('default', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                            });
-
-                            const history = user['subscription_history'];
-                            let duration = "-";
-                            Object.keys(history).forEach((paymentKey: string) => {
-                                const payment = history[paymentKey];
-                                duration = payment['subscriptionDuration'];
-                                
-                                const amount = Number(payment['amount'])
-                                totRevenue += amount;
-                                if (subscription == 'basic') {
-                                    basicRevenue += amount;
-                                } else if (subscription == 'premium') {
-                                    premiumRevenue += amount;
+                                if (subscription === 'basic') {
+                                    basic++;
+                                } else if (subscription === 'premium') {
+                                    premium++;
                                 }
-                            });
 
-                            newFinancialInfoChartData.push({
-                                userId: userKey,
-                                subscription: subscription,
-                                duration: duration,
-                                lastDate: lastDate
-                            });
+                                const lastDate = formatDate(user['subscription_time_end']);
+
+                                const history = user['subscription_history'];
+                                let duration = "-";
+                                
+                                if (history) {
+                                    Object.keys(history).forEach((paymentKey: string) => {
+                                        const payment = history[paymentKey];
+                                        duration = payment['subscriptionDuration'];
+                                        
+                                        const amount = Number(payment['amount'])
+                                        totRevenue += amount;
+                                        if (subscription == 'basic') {
+                                            basicRevenue += amount;
+                                        } else if (subscription == 'premium') {
+                                            premiumRevenue += amount;
+                                        }
+                                    });
+                                }
+
+                                newFinancialInfoChartData.push({
+                                    userId: userKey,
+                                    subscription: subscription,
+                                    duration: duration,
+                                    lastDate: lastDate
+                                });
+                            }
                         });
 
                         setFinancialInfoChartData(newFinancialInfoChartData);
@@ -93,18 +92,30 @@ export default function Page() {
                         setRevenueFromPremium(premiumRevenue);
                         setTotalRevenue(Number(totRevenue.toFixed(2)));
                     } else {
-                        console.log("No data available");
+                        console.log("No data available in Firebase");
+                        setFinancialInfoChartData([]);
                     }
                 } else {
-                    console.log("user not found.");
+                    console.log("User not authenticated");
+                    setFinancialInfoChartData([]);
                 }
             } catch (error) {
-                console.error(error);
+                console.error("Error fetching financial data:", error);
+                setFinancialInfoChartData([]);
             }
         };
 
         fetchData();
     }, []);
+
+    const formatDate = (date: string) => {
+        const [datePart, timePart] = date.split(' ');
+        const [month, day, year] = datePart.split(':');
+        const formattedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return formattedDate.toLocaleDateString('en-US', options);
+    };
 
     return (
         <div className="flex flex-col p-8 space-y-12">

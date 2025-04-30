@@ -11,8 +11,18 @@ interface ChartData {
 }
 
 export default function YearlyUsageGraph() {
-    const labels = ["Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", "Month 7", "Month 8", "Month 9", "Month 10", "Month 11", "Month 12"];
     const [chartData, setChartData] = useState<ChartData[]>([]);
+    
+    const labels: string[] = [];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    const today = new Date();
+    let currentMonth = today.getMonth();
+
+    for (let i = 11; i >= 0; i--) {
+        const monthIndex = (currentMonth - i + 12) % 12;
+        labels.push(monthNames[monthIndex]);
+    }
 
     useEffect(() => {
         const fetchData = async () => {

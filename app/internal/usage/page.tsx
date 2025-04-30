@@ -106,7 +106,6 @@ export default function Page() {
                             if (!isNaN(sessionLengths[i])) {
                                 sum += sessionLengths[i];
                                 count++;
-                                console.log("sum: " + sum + ", count: " + count);
                             }
                         }
                         setAvgSessionLength((sum / count).toFixed(2));

@@ -6,7 +6,6 @@ interface AccountsInfoChartData {
     userId: string;
     email: string;
     subscription: string;
-    duration: string;
     lastDate: string;
 }
 
@@ -24,7 +23,6 @@ const AccountsInfoTable: React.FC<AccountsInfoTableProps> = ({ AccountsInfoChart
                         <th className="py-2 px-4 border-b">User Id</th>
                         <th className="py-2 px-4 border-b">Email</th>
                         <th className="py-2 px-4 border-b">Subscription</th>
-                        <th className="py-2 px-4 border-b">Duration</th>
                         <th className="py-2 px-4 border-b">Last Date</th>
                     </tr>
                 </thead>
@@ -36,7 +34,6 @@ const AccountsInfoTable: React.FC<AccountsInfoTableProps> = ({ AccountsInfoChart
                             <td className="py-2 px-4 border-b text-center">{dataPoint.userId}</td>
                             <td className="py-2 px-4 border-b text-center">{dataPoint.email}</td>
                             <td className="py-2 px-4 border-b text-center">{dataPoint.subscription}</td>
-                            <td className="py-2 px-4 border-b text-center">{dataPoint.duration} days</td>
                             <td className="py-2 px-4 border-b text-center">{dataPoint.lastDate}</td>
                         </tr>
                     ))}

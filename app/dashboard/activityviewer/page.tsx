@@ -45,7 +45,7 @@ export default function Page() {
     };
 
     fetchData();
-  });
+  }, []);
 
   const handleFilterChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -79,16 +79,16 @@ export default function Page() {
       const tags = Array.isArray(activity.Tags) ? activity.Tags : [];
   
       return (
-        (selectedPlatforms.length === 0 || selectedPlatforms.every((val) => platforms.includes(val))) &&
-        (selectedDemographics.length === 0 || selectedDemographics.every((val) => demographics.includes(val))) &&
-        (selectedTags.length === 0 || selectedTags.every((val) => tags.includes(val)))
+        (selectedPlatforms.length === 0 || selectedPlatforms.some((val) => platforms.includes(val))) &&
+        (selectedDemographics.length === 0 || selectedDemographics.some((val) => demographics.includes(val))) &&
+        (selectedTags.length === 0 || selectedTags.some((val) => tags.includes(val)))
       );
     }
   );
 
   return (
     <div>
-      <div className="filter-options">
+      <div className="filter-options hidden">
         <div>
           <h3>Filter by Platform</h3>
           <input
@@ -234,6 +234,7 @@ export default function Page() {
         </div>
       </div>
 
+      <h1 className="font-bold text-4xl text-center my-8">Activity Viewer</h1>
       <div id="activity-tiles" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
       {filteredActivities.map(([key, activity]) => (
           <div

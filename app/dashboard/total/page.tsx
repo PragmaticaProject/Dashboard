@@ -6,15 +6,15 @@ export default function Page() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl p-8 font-bold text-center">Yearly Performance</h1>
+                <h1 className="text-2xl p-8 font-bold text-center">Performance in Past 12 Months</h1>
                 <PerformanceGraph />
             </div>
             <div>
-                <h1 className="text-2xl p-8 font-bold text-center">Activities Played This Year</h1>
+                <h1 className="text-2xl p-8 font-bold text-center">Activities Played in Past 12 Months</h1>
                 <YearlyUsageGraph />
             </div>
             <div>
-                <h1 className="text-2xl p-8 font-bold text-center">Hours Played This Year</h1>
+                <h1 className="text-2xl p-8 font-bold text-center">Hours Played in Past 12 Months</h1>
                 <YearlyHoursPlayedGraph />
             </div>
         </div>

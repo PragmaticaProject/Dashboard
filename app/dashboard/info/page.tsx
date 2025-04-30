@@ -16,6 +16,8 @@ export default function Page() {
     const [currentTokens, setCurrentTokens] = useState<number>(0);
     const [totalTokens, setTotalTokens] = useState<number>(0);
     const [usedTokens, setUsedTokens] = useState<number>(0);
+    const [subscriptionType, setSubscriptionType] = useState<string>("");
+    const [subscriptionEndDate, setSubscriptionEndDate] = useState<string>("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,14 +26,14 @@ export default function Page() {
 
                 if (user) {
                     const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/users/${userId}`));
+                    const userSnapshot = await get(child(ref(database), `prod/users/${userId}`));
                     
-                    if (snapshot.exists()) {
-                        console.log("Snapshot exists:", snapshot.exists());
-                        setName(snapshot.val()['name']);
-                        setEmail(snapshot.val()['email']);
-                        const settings = snapshot.val()['settings'];
-                        const stats = snapshot.val()['stats'];
+                    if (userSnapshot.exists()) {
+                        console.log("User Snapshot exists:", userSnapshot.exists());
+                        setName(userSnapshot.val()['name']);
+                        setEmail(userSnapshot.val()['email']);
+                        const settings = userSnapshot.val()['settings'];
+                        const stats = userSnapshot.val()['stats'];
 
                         setPlayMCAudio(settings['playMCAudio']);
                         setPlaySpeakingAudio(settings['playSpeakingAudio']);
@@ -44,6 +46,18 @@ export default function Page() {
                         setTotalTokens(stats["totalTokens"]);
                         setUsedTokens(parseInt(stats["totalTokens"]) - parseInt(stats["currentTokens"]));
                     }
+
+                    const accountSnapshot = await get(child(ref(database), `prod/accounts/${userId}`));
+
+                    if (accountSnapshot.exists()) {
+
+                        console.log("Account Snapshot exists:", accountSnapshot.exists());
+
+                        setEmail(accountSnapshot.val()['email']);
+                        setSubscriptionType(accountSnapshot.val()['subscription']);
+                        setSubscriptionEndDate(formatDate(accountSnapshot.val()['subscription_time_end']));
+                    }
+
                 } else {
                     console.log("User not found.");
                 }
@@ -97,16 +111,50 @@ export default function Page() {
         }
     };
 
+    const formatDate = (date: string) => {
+        const [datePart, timePart] = date.split(' ');
+        const [month, day, year] = datePart.split(':');
+        const formattedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return formattedDate.toLocaleDateString('en-US', options);
+    };
+
     return (
         <div className="flex mx-auto justify-center flex-col md:flex-row">
             <div className="px-4">
-                <h1 className="text-4xl font-bold text-center">User Parameters</h1>
+                <h1 className="text-4xl font-bold text-center pb-6">Personal Info</h1>
+                <div className="p-8">
+                    <table className="table-auto border-2 border-gray-700">
+                        <tbody>
+                            <tr>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Name:</td>
+                                <td className="border px-4 py-2">{name}</td>
+                            </tr>
+                            <tr>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Email:</td>
+                                <td className="border px-4 py-2">{email}</td>
+                            </tr>
+                            <tr>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Subscription Type:</td>
+                                <td className="border px-4 py-2">{subscriptionType}</td>
+                            </tr>
+                            <tr>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Subscription End Date:</td>
+                                <td className="border px-4 py-2">{subscriptionEndDate}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div className="px-4">
+                <h1 className="text-4xl font-bold text-center">User Settings</h1>
                 <h1 className="text-md text-center">Click the checkboxes to edit</h1>
                 <div className="p-8">
                     <table className="table-auto border-2 border-gray-700">
                         <tbody>
                             <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Play MC Audio:</td>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Play Multiple Choice Audio:</td>
                                 <td className="border px-4 py-2">
                                     <input 
                                         type="checkbox" 
@@ -164,23 +212,6 @@ export default function Page() {
                                         onChange={(e) => handleToggle("useVoiceRecognition", e.target.checked)} 
                                     />
                                 </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div className="px-4">
-                <h1 className="text-4xl font-bold text-center pb-6">Personal Info</h1>
-                <div className="p-8">
-                    <table className="table-auto border-2 border-gray-700">
-                        <tbody>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Name:</td>
-                                <td className="border px-4 py-2">{name}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Email:</td>
-                                <td className="border px-4 py-2">{email}</td>
                             </tr>
                         </tbody>
                     </table>

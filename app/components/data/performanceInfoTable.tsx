@@ -18,6 +18,12 @@ interface PerformanceInfoTableProps {
 
 const PerformanceInfoTable: React.FC<PerformanceInfoTableProps> = ({ PerformanceInfoChartData }) => {
 
+    const sortedPerformanceInfoChartData = PerformanceInfoChartData.sort((a, b) => {
+        const dateA = new Date(a.lastActivityDT);
+        const dateB = new Date(b.lastActivityDT);
+        return dateB.getTime() - dateA.getTime();
+    })
+
     return (
         <div>
             <table className="min-w-full bg-white border border-gray-300 shadow rounded">
@@ -33,7 +39,7 @@ const PerformanceInfoTable: React.FC<PerformanceInfoTableProps> = ({ Performance
                     </tr>
                 </thead>
                 <tbody>
-                    {PerformanceInfoChartData.map((dataPoint, index) => (
+                    {sortedPerformanceInfoChartData.map((dataPoint, index) => (
                         <tr key={index}
                             className={index % 2 === 0 ? 'bg-gray-100 cursor-pointer hover:bg-gray-300' : 'bg-white cursor-pointer hover:bg-gray-300'}
                         >

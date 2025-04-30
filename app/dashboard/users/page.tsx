@@ -19,18 +19,31 @@ export default function Page() {
         const fetchData = async () => {
             try {
                 const user = firebaseAuth.currentUser;
+                const userList: User[] = [];
+
+                console.log("user: " + user?.uid);
 
                 if (user) {
-                    const snapshot = await get(child(ref(database), `prod/admins/${user.uid}/users`));
+                    const snapshot = await get(child(ref(database), `prod/accounts`));
 
                     if (snapshot.exists()) {
-                        const userData = snapshot.val();
+                        const accounts = snapshot.val();
                         console.log("snapshot exists");
-                        console.log(userData);
-                        const userList = Object.entries(userData).map(([userId, userInfo]) => ({
-                            userId,
-                            ...(userInfo as { name: string; email: string }),
-                        }));
+
+                        Object.keys(accounts).forEach((userKey: string) => {
+                            const userData = accounts[userKey];
+
+                            Object.keys(userData['admins']).forEach((adminId: string) => {
+
+                                if (adminId === user.uid) {
+                                    userList.push({
+                                        userId: userKey,
+                                        name: userData['email'].split('@')[0],
+                                        email: userData['email']
+                                    });
+                                }
+                            }); 
+                        });
 
                         setUsers(userList);
                     }

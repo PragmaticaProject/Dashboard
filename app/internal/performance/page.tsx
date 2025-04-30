@@ -25,6 +25,16 @@ export default function Page() {
             try {
                 const user = firebaseAuth.currentUser;
                 if (user) {
+
+                    const accountsSnapshot = await get(child(ref(database), `prod/accounts`));
+                    let internalIds: string[] = [];
+
+                    Object.keys(accountsSnapshot.val()).forEach((userKey: string) => {
+                        if (accountsSnapshot.val()[userKey]['role'] === 'internal') {
+                            internalIds.push(userKey)
+                        }
+                    });
+                    
                     const snapshot = await get(child(ref(database), `prod/users`));
 
                     if (snapshot.exists()) {
@@ -36,46 +46,46 @@ export default function Page() {
 
                         Object.keys(users).forEach((userKey: string) => {
                             const user = users[userKey];
-                            const name = user['name'];
-                            const stats = user['stats'];
-                            const currentStreak = stats['currentStreak'];
-                            const longestStreak = stats['longestStreak'];
-                            const currentTokens = stats['currentTokens'];
-                            const totalTokens = stats['totalTokens'];
+                            
+                            if (!internalIds.includes(userKey)) {
+                                const name = user['name'];
+                                const stats = user['stats'];
+                                const currentStreak = stats['currentStreak'];
+                                const longestStreak = stats['longestStreak'];
+                                const currentTokens = stats['currentTokens'];
+                                const totalTokens = stats['totalTokens'];
 
-                            // Add to totals for averages
-                            if (longestStreak) {
-                                totalLongestStreak += parseInt(longestStreak);
+                                if (longestStreak) {
+                                    totalLongestStreak += parseInt(longestStreak);
+                                }
+                                if (currentTokens) {
+                                    totalCurrentTokens += parseInt(currentTokens);
+                                }
+                                userCount++;
+
+                                const [month, day, year] = stats['lastActivityDateTime'].substring(0, 10).split('/');
+                                const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                                const lastActivityDT = dateObj.toLocaleString('default', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                });
+
+                                newPerformanceInfoChartData.push({
+                                    userId: userKey,
+                                    name: name,
+                                    currentStreak: currentStreak,
+                                    longestStreak: longestStreak,
+                                    currentTokens: currentTokens,
+                                    totalTokens: totalTokens,
+                                    lastActivityDT: lastActivityDT
+                                });
                             }
-                            if (currentTokens) {
-                                totalCurrentTokens += parseInt(currentTokens);
-                            }
-                            userCount++;
-
-                            // Parse and format the last activity date
-                            const [month, day, year] = stats['lastActivityDateTime'].substring(0, 10).split('/');
-                            const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const lastActivityDT = dateObj.toLocaleString('default', {
-                                month: 'short',
-                                day: 'numeric',
-                            });
-
-                            newPerformanceInfoChartData.push({
-                                userId: userKey,
-                                name: name,
-                                currentStreak: currentStreak,
-                                longestStreak: longestStreak,
-                                currentTokens: currentTokens,
-                                totalTokens: totalTokens,
-                                lastActivityDT: lastActivityDT
-                            });
                         });
 
-                        // Calculate averages
                         setAvgLongestStreak(totalLongestStreak / userCount);
                         setAvgCurrentTokens(totalCurrentTokens / userCount);
 
-                        // Set data for the table
                         setPerformanceInfoChartData(newPerformanceInfoChartData);
                     } else {
                         console.log("No data available");

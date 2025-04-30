@@ -9,7 +9,6 @@ interface AccountsInfoChartData {
     userId: string;
     email: string;
     subscription: string;
-    duration: string;
     lastDate: string;
 }
 
@@ -38,7 +37,6 @@ export default function Page() {
                         let premium = 0;
 
                         Object.keys(snapshot.val()).forEach((userKey: string) => {
-                            console.log(userKey);
 
                             const user = snapshot.val()[userKey];
                             const email = user['email'];
@@ -50,26 +48,12 @@ export default function Page() {
                                 premium++;
                             }
 
-                            const [month, day, year] = user['subscription_time_end'].substring(0, 10).split(':');
-                            const dateObj = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                            const lastDate = dateObj.toLocaleString('default', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                            });
-
-                            const history = user['subscription_history'];
-                            let duration = "-";
-                            Object.keys(history).forEach((paymentKey: string) => {
-                                const payment = history[paymentKey];
-                                duration = payment['subscriptionDuration'];
-                            });
-
+                            const lastDate = formatDate(user['subscription_time_end']);
+                            
                             newAccountsInfoChartData.push({
                                 userId: userKey,
                                 email: email,
                                 subscription: subscription,
-                                duration: duration,
                                 lastDate: lastDate
                             });
                         });
@@ -90,6 +74,15 @@ export default function Page() {
 
         fetchData();
     }, []);
+
+    const formatDate = (date: string) => {
+        const [datePart, timePart] = date.split(' ');
+        const [month, day, year] = datePart.split(':');
+        const formattedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return formattedDate.toLocaleDateString('en-US', options);
+    };
 
     return (
         <div className="flex flex-col p-8 space-y-12">

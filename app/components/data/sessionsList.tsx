@@ -66,14 +66,14 @@ export default function SessionsList() {
     <div className="mx-auto max-w-lg">
       <h1 className="text-center text-2xl font-bold mb-4">All Sessions</h1>
       {data && (
-        <table className="w-full bg-white border border-gray-300 shadow-lg rounded-lg overflow-hidden">
-          <thead className="bg-gray-200">
+        <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
+          <thead className="bg-blue-500">
             <tr>
-              <th className="py-2 pl-4 text-center">Session</th>
+              <th className="py-2 pl-4 text-center text-white">Session</th>
             </tr>
           </thead>
           <tbody>
-            {Object.entries(data).map(([key, value]) => (
+            {Object.entries(data).sort((a, b) => b[0].localeCompare(a[0])).map(([key, value]) => (
               <tr key={key} className="border-b">
                  <td className="py-2 px-4 text-center hover:bg-gray-100">
                   <Link href={{ pathname: `/dashboard/sessions/${encodeURIComponent(value)}`, 
