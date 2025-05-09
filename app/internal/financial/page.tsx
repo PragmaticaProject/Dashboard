@@ -46,7 +46,7 @@ export default function Page() {
 
                             const user = snapshot.val()[userKey];
 
-                            if (user['role'] !== 'internal') {
+                            if (user['role'] === 'user') {
                                 const email = user['email'];
                                 const subscription = user['subscription'];
 

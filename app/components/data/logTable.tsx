@@ -17,6 +17,20 @@ interface LogTableProps {
 }
 
 const LogTable: React.FC<LogTableProps> = ({ LogChartData }) => {
+    const getLogTypeColor = (logType: string) => {
+        switch (logType.toLowerCase()) {
+            case 'log':
+                return 'bg-gray-200';
+            case 'warning':
+                return 'bg-yellow-200';
+            case 'error':
+                return 'bg-red-200';
+            case 'leaderboard':
+                return 'bg-green-200';
+            default:
+                return 'bg-gray-200';
+        }
+    };
 
     return (
         <div>
@@ -34,7 +48,7 @@ const LogTable: React.FC<LogTableProps> = ({ LogChartData }) => {
                 <tbody>
                     {LogChartData.map((dataPoint, index) => (
                         <tr key={index}
-                            className={index % 2 === 0 ? 'bg-gray-100 cursor-pointer hover:bg-gray-300' : 'bg-white cursor-pointer hover:bg-gray-300'}
+                            className={`cursor-pointer hover:bg-gray-300 ${getLogTypeColor(dataPoint.logType)}`}
                         >
                             <td className="py-2 px-4 border-b text-center">{dataPoint.dateTime}</td>
                             <td className="py-2 px-4 border-b text-center">{dataPoint.userId}</td>

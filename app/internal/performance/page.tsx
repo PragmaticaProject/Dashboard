@@ -27,11 +27,11 @@ export default function Page() {
                 if (user) {
 
                     const accountsSnapshot = await get(child(ref(database), `prod/accounts`));
-                    let internalIds: string[] = [];
+                    let userTypeIds: string[] = [];
 
                     Object.keys(accountsSnapshot.val()).forEach((userKey: string) => {
-                        if (accountsSnapshot.val()[userKey]['role'] === 'internal') {
-                            internalIds.push(userKey)
+                        if (accountsSnapshot.val()[userKey]['role'] === 'user') {
+                            userTypeIds.push(userKey)
                         }
                     });
                     
@@ -47,7 +47,7 @@ export default function Page() {
                         Object.keys(users).forEach((userKey: string) => {
                             const user = users[userKey];
                             
-                            if (!internalIds.includes(userKey)) {
+                            if (userTypeIds.includes(userKey)) {
                                 const name = user['name'];
                                 const stats = user['stats'];
                                 const currentStreak = stats['currentStreak'];

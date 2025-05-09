@@ -12,7 +12,7 @@ export default function Page() {
                 <h1>If you would like to speak with us, schedule a meeting at your convenience:</h1>
                 <Link 
                 className="flex py-4 my-6 justify-center bg-blue-500 hover:bg-blue-400 rounded-xl"
-                href="https://calendly.com/karthikprasad62/pragmatica-meeting"
+                href="https://calendly.com/thomas-pragmatica/30min"
                 >
                     <div className="text-white">
                         <h1>Schedule a Meeting</h1>

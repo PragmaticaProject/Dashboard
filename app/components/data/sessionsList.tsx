@@ -73,7 +73,13 @@ export default function SessionsList() {
             </tr>
           </thead>
           <tbody>
-            {Object.entries(data).sort((a, b) => b[0].localeCompare(a[0])).map(([key, value]) => (
+            {Object.entries(data).sort((a, b) => {
+                const [monthA, dayA, yearA] = a[0].substring(0, 10).split(':');
+                const [monthB, dayB, yearB] = b[0].substring(0, 10).split(':');
+                const dateA = new Date(parseInt(yearA), parseInt(monthA) - 1, parseInt(dayA));
+                const dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB));
+                return dateB.getTime() - dateA.getTime();
+            }).map(([key, value]) => (
               <tr key={key} className="border-b">
                  <td className="py-2 px-4 text-center hover:bg-gray-100">
                   <Link href={{ pathname: `/dashboard/sessions/${encodeURIComponent(value)}`, 

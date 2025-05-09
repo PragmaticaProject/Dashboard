@@ -7,6 +7,8 @@ import { firebaseAuth, database } from "@/app/firebase";
 export default function Page() {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
+    const [subscriptionType, setSubscriptionType] = useState<string>("");
+    const [subscriptionEndDate, setSubscriptionEndDate] = useState<string>("");
     const [playMCAudio, setPlayMCAudio] = useState<boolean>(false);
     const [playSpeakingAudio, setPlaySpeakingAudio] = useState<boolean>(false);
     const [showMenuAudioButtons, setShowMenuAudioButtons] = useState<boolean>(false);
@@ -14,10 +16,9 @@ export default function Page() {
     const [showTips, setShowTips] = useState<boolean>(false);
     const [useVoiceRecognition, setUseVoiceRecognition] = useState<boolean>(false);
     const [currentTokens, setCurrentTokens] = useState<number>(0);
-    const [totalTokens, setTotalTokens] = useState<number>(0);
-    const [usedTokens, setUsedTokens] = useState<number>(0);
-    const [subscriptionType, setSubscriptionType] = useState<string>("");
-    const [subscriptionEndDate, setSubscriptionEndDate] = useState<string>("");
+    const [currentStreak, setCurrentStreak] = useState<number>(0);
+    const [longestStreak, setLongestStreak] = useState<number>(0);
+    const [lastActivityDate, setLastActivityDate] = useState<string>("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,9 +43,11 @@ export default function Page() {
                         setShowTips(settings['showTips']);
                         setUseVoiceRecognition(settings['useVoiceRecognition']);
 
+                        setCurrentStreak(stats['currentStreak']);
+                        setLongestStreak(stats['longestStreak']);
                         setCurrentTokens(stats["currentTokens"]);
-                        setTotalTokens(stats["totalTokens"]);
-                        setUsedTokens(parseInt(stats["totalTokens"]) - parseInt(stats["currentTokens"]));
+
+                        setLastActivityDate(stats['lastActivityDateTime'].split(' ')[0]);
                     }
 
                     const accountSnapshot = await get(child(ref(database), `prod/accounts/${userId}`));
@@ -55,7 +58,7 @@ export default function Page() {
 
                         setEmail(accountSnapshot.val()['email']);
                         setSubscriptionType(accountSnapshot.val()['subscription']);
-                        setSubscriptionEndDate(formatDate(accountSnapshot.val()['subscription_time_end']));
+                        setSubscriptionEndDate((accountSnapshot.val()['subscription_time_end'].split(' ')[0]));
                     }
 
                 } else {
@@ -109,15 +112,6 @@ export default function Page() {
         } catch (error) {
             console.error(error);
         }
-    };
-
-    const formatDate = (date: string) => {
-        const [datePart, timePart] = date.split(' ');
-        const [month, day, year] = datePart.split(':');
-        const formattedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-        
-        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-        return formattedDate.toLocaleDateString('en-US', options);
     };
 
     return (
@@ -218,21 +212,25 @@ export default function Page() {
                 </div>
             </div>
             <div className="px-4">
-                <h1 className="text-4xl font-bold text-center pb-6">Token Info</h1>
+                <h1 className="text-4xl font-bold text-center pb-6">Usage Info</h1>
                 <div className="p-8">
                     <table className="table-auto border-2 border-gray-700">
                         <tbody>
                             <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Total Tokens:</td>
-                                <td className="border px-4 py-2">{totalTokens}</td>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Current Streak:</td>
+                                <td className="border px-4 py-2">{currentStreak}</td>
+                            </tr>
+                            <tr>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Longest Streak:</td>
+                                <td className="border px-4 py-2">{longestStreak}</td>
                             </tr>
                             <tr>
                                 <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Current Tokens:</td>
                                 <td className="border px-4 py-2">{currentTokens}</td>
                             </tr>
                             <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Used Tokens:</td>
-                                <td className="border px-4 py-2">{usedTokens}</td>
+                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Last Activity Date:</td>
+                                <td className="border px-4 py-2">{lastActivityDate}</td>
                             </tr>
                         </tbody>
                     </table>

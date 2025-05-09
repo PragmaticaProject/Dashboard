@@ -37,25 +37,28 @@ export default function Page() {
                         let premium = 0;
 
                         Object.keys(snapshot.val()).forEach((userKey: string) => {
-
-                            const user = snapshot.val()[userKey];
-                            const email = user['email'];
-                            const subscription = user['subscription'];
-
-                            if (subscription === 'basic') {
-                                basic++;
-                            } else if (subscription === 'premium') {
-                                premium++;
-                            }
-
-                            const lastDate = formatDate(user['subscription_time_end']);
                             
-                            newAccountsInfoChartData.push({
-                                userId: userKey,
-                                email: email,
-                                subscription: subscription,
-                                lastDate: lastDate
-                            });
+                            const user = snapshot.val()[userKey];
+                            
+                            if (user['role'] === 'user') {
+                                const email = user['email'];
+                                const subscription = user['subscription'];
+
+                                if (subscription === 'basic') {
+                                    basic++;
+                                } else if (subscription === 'premium') {
+                                    premium++;
+                                }
+
+                                const lastDate = formatDate(user['subscription_time_end']);
+                                
+                                newAccountsInfoChartData.push({
+                                    userId: userKey,
+                                    email: email,
+                                    subscription: subscription,
+                                    lastDate: lastDate
+                                });
+                            }
                         });
 
                         setAccountsInfoChartData(newAccountsInfoChartData);
