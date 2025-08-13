@@ -10,6 +10,8 @@ import AssignedActivitiesList from "../components/data/assignedActivitiesList";
 export default function Page() {
     const [name, setName] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    const [assigned, setAssigned] = useState<Record<string, any> | null>(null);
+    const [other, setOther] = useState<Record<string, any>>({});
     const router = useRouter();
 
     useEffect(() => {
@@ -25,6 +27,24 @@ export default function Page() {
                         console.log("Snapshot exists:", snapshot.exists());
                         const userName = snapshot.val()['name'];
                         setName(userName);
+                    }
+
+                    const assignedSnapshot = await get(child(ref(database), `prod/users/${userId}/activities/assignedActivities`));
+                    if (assignedSnapshot.exists()) {
+                        setAssigned(assignedSnapshot.val());
+                    }
+
+                    const allActivitiesSnapshot = await get(child(ref(database), `prod/activities/collection`));
+                    if (allActivitiesSnapshot.exists()) {
+                        const allActivities: Record<string, any> = allActivitiesSnapshot.val();
+                        const assignedKeys = assignedSnapshot.exists() ? Object.keys(assignedSnapshot.val()) : [];
+                        const filteredOtherActivities = Object.keys(allActivities)
+                            .filter(key => !assignedKeys.includes(key))
+                            .reduce((obj: Record<string, any>, key: string) => {
+                                obj[key] = allActivities[key];
+                                return obj;
+                            }, {});
+                        setOther(filteredOtherActivities);
                     }
                 } else {
                     console.log("User not found.");
@@ -67,7 +87,6 @@ export default function Page() {
                     <Link href="/dashboard/weekly/" className="group rounded-2xl p-5 bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-lg ring-1 ring-white/10 transition-all hover:shadow-xl hover:-translate-y-0.5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-sm opacity-90">Reports</div>
                                 <h3 className="mt-1 text-xl font-semibold">Weekly Data</h3>
                             </div>
                             <svg className="h-6 w-6 opacity-90 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -80,7 +99,6 @@ export default function Page() {
                     <Link href="/dashboard/monthly/" className="group rounded-2xl p-5 bg-gradient-to-br from-sky-500 to-cyan-600 text-white shadow-lg ring-1 ring-white/10 transition-all hover:shadow-xl hover:-translate-y-0.5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-sm opacity-90">Reports</div>
                                 <h3 className="mt-1 text-xl font-semibold">Monthly Data</h3>
                             </div>
                             <svg className="h-6 w-6 opacity-90 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -93,7 +111,6 @@ export default function Page() {
                     <Link href="/dashboard/total/" className="group rounded-2xl p-5 bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg ring-1 ring-white/10 transition-all hover:shadow-xl hover:-translate-y-0.5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-sm opacity-90">Reports</div>
                                 <h3 className="mt-1 text-xl font-semibold">Yearly Data</h3>
                             </div>
                             <svg className="h-6 w-6 opacity-90 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -113,7 +130,7 @@ export default function Page() {
                                 <Link href="/dashboard/activities" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">View all</Link>
                             </div>
                             <div className="p-5">
-                                <AssignedActivitiesList />
+                                <AssignedActivitiesList initialAssigned={assigned} initialOther={other} />
                             </div>
                         </div>
                     </div>

@@ -1,59 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { ref, child, get, update } from "firebase/database";
-import { firebaseApp, firebaseAuth, database } from "@/app/firebase";
+import { useEffect, useState } from "react";
+import { ref, update } from "firebase/database";
+import { firebaseAuth, database } from "@/app/firebase";
 
-export default function AssignedActivitiesList() {
-  const app = firebaseApp;
+export default function AssignedActivitiesList({ initialAssigned, initialOther }: { initialAssigned: Record<string, any> | null, initialOther: Record<string, any> }) {
   const auth = firebaseAuth;
-  const dbRef = ref(database);
-  const [assignedActivities, setAssignedActivities] = useState<Record<string, any> | null>(null);
-  const [otherActivities, setOtherActivities] = useState<Record<string, any>>({});
+  const [assignedActivities, setAssignedActivities] = useState<Record<string, any> | null>(initialAssigned);
+  const [otherActivities, setOtherActivities] = useState<Record<string, any>>(initialOther);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user) {
-          const userId = localStorage.getItem("currentUser");
-          const assignedSnapshot = await get(child(dbRef, `prod/users/${userId}/activities/assignedActivities`));
+    setAssignedActivities(initialAssigned);
+  }, [initialAssigned]);
 
-          if (assignedSnapshot.exists()) {
-            console.log("Assigned activities snapshot found.");
-            setAssignedActivities(assignedSnapshot.val());
-          } else {
-            console.log("No assigned activities available");
-          }
-
-          const allActivitiesSnapshot = await get(child(dbRef, `prod/activities/collection`));
-
-          if (allActivitiesSnapshot.exists()) {
-            console.log("All activities snapshot found.");
-            const allActivities: Record<string, any> = allActivitiesSnapshot.val();
-
-            const assignedKeys = assignedSnapshot.exists() ? Object.keys(assignedSnapshot.val()) : [];
-            const filteredOtherActivities = Object.keys(allActivities)
-              .filter(key => !assignedKeys.includes(key))
-              .reduce((obj: Record<string, any>, key: string) => {
-                obj[key] = allActivities[key];
-                return obj;
-              }, {});
-            setOtherActivities(filteredOtherActivities);
-          } else {
-            console.log("No activities available");
-          }
-        } else {
-          console.log("user not found.");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  useEffect(() => {
+    setOtherActivities(initialOther);
+  }, [initialOther]);
 
   const handleDelete = async (deletedActivityKey: string) => {
     try {

@@ -1,48 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { ref, child, get } from "firebase/database";
-import { firebaseApp, firebaseAuth, database } from "@/app/firebase";
 
-export default function SessionsList() {
-  const app = firebaseApp;
-  const auth = firebaseAuth;
-  const dbRef = ref(database);
-  const [data, setData] = useState<{ [key: string]: string }>();
-
-  useEffect(() => {
-    const fetchData = async () => {
-        try {
-            const user = auth.currentUser;
-            if (user) {
-                    const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(dbRef, `prod/users/${userId}/sessions`));
-                
-                if (snapshot.exists()) {
-                    console.log("snapshot found.");
-
-                    const newData: { [key: string]: string } = {};
-                    Object.keys(snapshot.val()).forEach((sessionId: string) => {
-                        const formattedDateTime = formatDateTime(sessionId.substring(0, 19));
-                        newData[sessionId] = formattedDateTime;                        
-                    });
-                    
-                    setData(newData);
-                } else {
-                    console.log("No data available");
-                }
-            }
-            else {
-                console.log("user not found.");
-            }
-        } catch (error) {
-        console.error(error);
-        }
-    };
-
-    fetchData();
-  }, []);
+export default function SessionsList({ sessions }: { sessions: { [key: string]: string } | null }) {
+  const data = sessions || undefined;
 
   const formatDateTime = (dateTimeString: string): string => {
     const [month, day, year, hour, minute] = dateTimeString.split(/[:\-]/);

@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ref, child, get } from "firebase/database";
-import { firebaseAuth, database } from "@/app/firebase";import { PieChart, Pie, Legend, Tooltip } from 'recharts';
+import { firebaseAuth, database } from "@/app/firebase";import { PieChart, Pie, Legend, Tooltip, Cell } from 'recharts';
+import Link from "next/link";
 
 export default function Page() {
     const activityId = useSearchParams().get('activityId');
@@ -17,6 +18,7 @@ export default function Page() {
     const [targetsHitDescriptionList, setTargetsHitDescriptionList] = useState<string[]>();
     const [targetsMissedNameList, setTargetsMissedNameList] = useState<string[]>();
     const [targetsMissedDescriptionList, setTargetsMissedDescriptionList] = useState<string[]>();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     useEffect(() => {
@@ -98,79 +100,101 @@ export default function Page() {
     
 
     return (
-        <div className="flex flex-col space-y-6">
-            <div className="flex flex-col md:flex-row">
-                <div className="flex flex-col mx-auto justify-center px-16 rounded-lg shadow-xl">
-                    <h1 className="text-center text-2xl font-bold mb-8">Activity Details</h1>
-                    <h1 className="text-center text-lg mb-2">Activity Name: {activityName?.replace(/([A-Z0-9])/g, ' $1').trim()}</h1>
-                    <h1 className="text-center text-lg mb-2">Activity Start: {activityStartDT}</h1>
-                    <h1 className="text-center text-lg mb-2">Activity End: {activityEndDT}</h1>
-                    <h1 className="text-center text-lg mb-2">Activity Duration: {activityDuration}</h1>
-                    <h1 className="text-center text-lg mb-2">Activity Score: {activityScore}</h1>
+        <div className="space-y-6 p-4 sm:p-6">
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-sky-600 via-cyan-600 to-emerald-600 p-6 text-white shadow-sm">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <div className="text-xs uppercase tracking-wide opacity-90">Playthrough</div>
+                        <h1 className="mt-1 text-2xl sm:text-3xl font-bold">
+                            {activityName?.replace(/([A-Z0-9])/g, ' $1').trim()}
+                        </h1>
+                        <div className="mt-2 text-sm opacity-90">Detailed breakdown</div>
+                    </div>
+                    <Link href={`/dashboard/activities/${encodeURIComponent(activityName || '')}?activityName=${activityName || ''}`} className="rounded-md bg-white/15 px-3 py-1.5 text-sm backdrop-blur hover:bg-white/25">Back</Link>
                 </div>
-                <div className="flex mx-auto justify-center pr-24 rounded-lg shadow-xl">
-                    <PieChart width={500} height={400}>
-                        <text x={300} y={40} textAnchor="middle" dominantBaseline="middle" fontSize={24} fontWeight="bold" fill="#333333">Activity Targets</text>
-                        <Pie dataKey="value" data={pieChartData} cx={200} cy={200} outerRadius={80} fill="#8884d8" label />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <StatCard label="Start" value={activityStartDT || (isLoading ? '—' : '—')} />
+                <StatCard label="End" value={activityEndDT || (isLoading ? '—' : '—')} />
+                <StatCard label="Duration" value={activityDuration || (isLoading ? '—' : '—')} />
+                <StatCard label="Score" value={activityScore || (isLoading ? '—' : '—')} />
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <h2 className="mb-4 text-lg font-semibold text-gray-900">Activity Targets</h2>
+                <div className="flex items-center justify-center">
+                    <PieChart width={520} height={360}>
+                        <Pie dataKey="value" data={pieChartData} cx={200} cy={180} innerRadius={60} outerRadius={100} label>
+                            {pieChartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                            ))}
+                        </Pie>
                         <Tooltip />
                         <Legend align="right" verticalAlign="middle" layout="vertical" />
                     </PieChart>
                 </div>
             </div>
-            <h1 className="text-2xl font-bold text-center pt-8">Targets Hit</h1>
-            <div className="flex flex-col lg:flex-row px-8">
-                <table className="mx-auto bg-white border border-gray-300 shadow rounded-lg overflow-hidden">
-                    <thead className="bg-blue-500">
-                        <tr>
-                            <th scope="col" className="py-4 px-24 border-b text-white">
-                                Target Name
-                            </th>
-                            <th scope="col" className="py-4 px-24 border-b text-white">
-                                Description
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-blue-500">
-                        {targetsHitNameList && targetsHitDescriptionList && targetsHitNameList.map((name, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                                <td className="py-4 px-4 border-b font-bold text-center">
-                                    {name}
-                                </td>
-                                <td className="py-4 px-4 border-b text-left">
-                                    {targetsHitDescriptionList[index]}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <h1 className="text-2xl font-bold text-center pt-8">Targets Missed</h1>
-            <div className="flex flex-col lg:flex-row px-8">
-                <table className="mx-auto bg-white border border-gray-300 shadow rounded-lg overflow-hidden">
-                    <thead className="bg-blue-500">
-                        <tr>
-                            <th scope="col" className="py-4 px-24 border-b text-white">
-                                Target Name
-                            </th>
-                            <th scope="col" className="py-4 px-24 border-b text-white">
-                                Description
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-blue-500">
-                        {targetsMissedNameList && targetsMissedDescriptionList && targetsMissedNameList.map((name, index) => (
-                            <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
-                                <td className="py-4 px-4 border-b font-bold text-center">
-                                    {name}
-                                </td>
-                                <td className="py-4 px-4 border-b text-left">
-                                    {targetsMissedDescriptionList[index]}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-900">Targets Hit</h2>
+                    <div className="overflow-hidden rounded-lg border border-gray-200">
+                        <table className="w-full text-sm">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="py-3 px-4 text-left font-medium text-gray-600">Target</th>
+                                    <th className="py-3 px-4 text-left font-medium text-gray-600">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {targetsHitNameList && targetsHitDescriptionList && targetsHitNameList.map((name, index) => (
+                                    <tr key={index} className="border-t">
+                                        <td className="py-3 px-4 font-medium text-gray-900">{name}</td>
+                                        <td className="py-3 px-4 text-gray-700">{targetsHitDescriptionList[index]}</td>
+                                    </tr>
+                                ))}
+                                {(!targetsHitNameList || targetsHitNameList.length === 0) && (
+                                    <tr><td colSpan={2} className="py-6 text-center text-gray-500">{isLoading ? 'Loading...' : 'No targets hit.'}</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                    <h2 className="mb-4 text-lg font-semibold text-gray-900">Targets Missed</h2>
+                    <div className="overflow-hidden rounded-lg border border-gray-200">
+                        <table className="w-full text-sm">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="py-3 px-4 text-left font-medium text-gray-600">Target</th>
+                                    <th className="py-3 px-4 text-left font-medium text-gray-600">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {targetsMissedNameList && targetsMissedDescriptionList && targetsMissedNameList.map((name, index) => (
+                                    <tr key={index} className="border-t">
+                                        <td className="py-3 px-4 font-medium text-gray-900">{name}</td>
+                                        <td className="py-3 px-4 text-gray-700">{targetsMissedDescriptionList[index]}</td>
+                                    </tr>
+                                ))}
+                                {(!targetsMissedNameList || targetsMissedNameList.length === 0) && (
+                                    <tr><td colSpan={2} className="py-6 text-center text-gray-500">{isLoading ? 'Loading...' : 'No targets missed.'}</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     )
+}
+
+function StatCard({ label, value }: { label: string; value: string | number }) {
+    return (
+        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</div>
+            <div className="mt-1 text-2xl font-semibold text-gray-900">{value}</div>
+        </div>
+    );
 }

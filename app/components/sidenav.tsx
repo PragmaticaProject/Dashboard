@@ -1,30 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { firebaseAuth, database } from "@/app/firebase";
-import { ref, child, get } from "firebase/database";
 
-export default function SideNav() {
-    const [isInternal, setIsInternal] = useState(false);
-
-    useEffect(() => {
-        const fetchUserRole = async () => {
-            try {
-                const user = firebaseAuth.currentUser;
-                if (user) {
-                    const snapshot = await get(child(ref(database), `prod/accounts/${user.uid}/role`));
-                    if (snapshot.exists() && snapshot.val() === "internal") {
-                        setIsInternal(true);
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching user role:", error);
-            }
-        };
-
-        fetchUserRole();
-    }, []);
+export default function SideNav({ isInternal }: { isInternal: boolean }) {
 
     return (
         <div className="flex flex-col bg-blue-500 shadow-inner py-4 md:h-full md:px-2">

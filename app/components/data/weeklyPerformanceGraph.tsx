@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ref, child, get } from "firebase/database";
-import { firebaseAuth, database } from "@/app/firebase";
+import { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 
 interface ChartData {
@@ -13,63 +11,32 @@ interface ChartData {
     tokens: string;
 }
 
-export default function WeeklyPerformanceGraph() {
-    const [chartData, setChartData] = useState<ChartData[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const user = firebaseAuth.currentUser;
-                if (user) {
-                    const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
-
-                    if (snapshot.exists()) {
-                        console.log("snapshot found.");
-                        
-                        const newData: ChartData[] = [];
-
-                        Object.keys(snapshot.val()).forEach((activityName: string) => {
-                            const rawData: ChartData[] = Object.keys(snapshot.val()[activityName]).map((activityKey: string) => {
-                                const activity = snapshot.val()[activityName][activityKey];
-        
-                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-        
-                                return {
-                                    name: activity['name'],
-                                    date: activityDate.toLocaleString('default', { month: 'short', day: 'numeric' }),
-                                    sortableDate: activityDate.toISOString().substring(0, 10),
-                                    score: activity['score'],
-                                    tokens: activity['tokensAdded']
-                                };
-                            }).filter(activity => {
-                                const daysDiff = Math.round((new Date().getTime() - new Date(activity.sortableDate).getTime()) / (1000 * 3600 * 24));
-                                return daysDiff < 8;
-                            });
-
-                            
-                            const sortedData = rawData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
-                            sortedData.forEach(data => console.log(data.sortableDate));
-                            //setChartData(sortedData);
-                            newData.push(...sortedData);
-                        });
-
-                        newData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
-                        setChartData(newData);
-                    } else {
-                        console.log("No data available");
-                    }
-                } else {
-                    console.log("user not found.");
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
-    }, []);
+export default function WeeklyPerformanceGraph({ history }: { history: Record<string, Record<string, any>> | null }) {
+    const chartData = useMemo<ChartData[]>(() => {
+        if (!history) return [];
+        const newData: ChartData[] = [];
+        Object.keys(history).forEach((activityName: string) => {
+            const rawData: ChartData[] = Object.keys(history[activityName]).map((activityKey: string) => {
+                const activity = history[activityName][activityKey];
+                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                return {
+                    name: activity['name'],
+                    date: activityDate.toLocaleString('default', { month: 'short', day: 'numeric' }),
+                    sortableDate: activityDate.toISOString().substring(0, 10),
+                    score: activity['score'],
+                    tokens: activity['tokensAdded']
+                };
+            }).filter(activity => {
+                const daysDiff = Math.round((new Date().getTime() - new Date(activity.sortableDate).getTime()) / (1000 * 3600 * 24));
+                return daysDiff < 8;
+            });
+            const sortedData = rawData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
+            newData.push(...sortedData);
+        });
+        newData.sort((a, b) => a.sortableDate.localeCompare(b.sortableDate));
+        return newData;
+    }, [history]);
 
     return (
         <div>

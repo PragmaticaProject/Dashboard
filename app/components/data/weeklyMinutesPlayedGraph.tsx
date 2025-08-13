@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ref, child, get } from "firebase/database";
-import { firebaseAuth, database } from "@/app/firebase";
+import { useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 
 interface ChartData {
@@ -10,9 +8,7 @@ interface ChartData {
     count: number;
 } 
 
-export default function WeeklyMinutesPlayedGraph() {
-    const [chartData, setChartData] = useState<ChartData[]>([]);
-
+export default function WeeklyMinutesPlayedGraph({ history }: { history: Record<string, Record<string, any>> | null }) {
     const labels = [
         convertWeekdayToLabel(6), 
         convertWeekdayToLabel(5), 
@@ -23,51 +19,23 @@ export default function WeeklyMinutesPlayedGraph() {
         convertWeekdayToLabel(0), 
     ];
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const user = firebaseAuth.currentUser;
+    const chartData = useMemo<ChartData[]>(() => {
+        const base: ChartData[] = labels.map((label) => ({ day: label, count: 0 }));
+        if (!history) return base;
 
-                if (user) {
-                    const userId = localStorage.getItem("currentUser");
-                    const snapshot = await get(child(ref(database), `prod/activities/history/${userId}`));
-
-                    if (snapshot.exists()) {
-                        console.log("snapshot found.");
-
-                        const newData: ChartData[] = labels.map((label) => ({
-                            day: label,
-                            count: 0,
-                        }));
-
-                        Object.keys(snapshot.val()).forEach((activityName: string) => {
-                            Object.keys(snapshot.val()[activityName]).forEach((activityKey: string) => {
-                                const activity = snapshot.val()[activityName][activityKey];
-    
-                                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
-                                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-                                const daysDiff = Math.floor((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
-    
-                                if (daysDiff < 7) {
-                                    newData[6 - daysDiff].count += parseInt(activity["duration"]);
-                                }
-                            });
-    
-                            setChartData(newData);
-                        });
-                    } else {
-                        console.log("No data available");
-                    }
-                } else {
-                    console.log("user not found.");
+        Object.keys(history).forEach((activityName: string) => {
+            Object.keys(history[activityName]).forEach((activityKey: string) => {
+                const activity = history[activityName][activityKey];
+                const [month, day, year] = activity['endDT'].substring(0, 10).split(':');
+                const activityDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                const daysDiff = Math.floor((Date.now() - activityDate.getTime()) / (1000 * 3600 * 24));
+                if (daysDiff < 7) {
+                    base[6 - daysDiff].count += parseInt(activity["duration"]);
                 }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
-    }, []);
+            });
+        });
+        return base;
+    }, [history]);
 
     return (
         <div>
