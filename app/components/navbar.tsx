@@ -43,14 +43,6 @@ export default function NavBar() {
                 </Link>
                 <Link 
                 className="flex py-2 px-8 justify-center hover:bg-gray-300 rounded-lg"
-                href="/dashboard/settings"
-                >
-                    <div className="text-md text-black">
-                        <h1>Settings</h1>
-                    </div>
-                </Link>
-                <Link 
-                className="flex py-2 px-8 justify-center hover:bg-gray-300 rounded-lg"
                 href="/dashboard/product"
                 >
                     <div className="text-md text-black">

@@ -200,8 +200,8 @@ export default function Page() {
 											checked={item.value}
 											onChange={(e) => item.setter(e.target.checked)}
 										/>
-										<div className="w-11 h-6 rounded-full bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 transition-colors peer-checked:bg-indigo-600 relative">
-											<span className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white border border-slate-300 shadow transition-all peer-checked:translate-x-5" />
+										<div className="w-11 h-6 rounded-full bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 transition-colors peer-checked:bg-indigo-600 relative peer-checked:[&>span]:translate-x-5">
+											<span className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white border border-slate-300 shadow transform transition-transform duration-200 pointer-events-none" />
 										</div>
 									</label>
 								</div>
