@@ -119,11 +119,11 @@ export default function UsageKpis({ range, history }: UsageKpisProps) {
 
 function KpiCard({ label, value }: { label: string; value: string | number | undefined }) {
     return (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-            <div className="text-xs font-medium uppercase tracking-wide text-gray-500">{label}</div>
-            <div className="mt-1 text-2xl font-semibold text-gray-900">{value ?? "—"}</div>
-            <div className="mt-2 h-1 w-full rounded bg-blue-100">
-                <div className="h-1 w-1/3 rounded bg-blue-600"></div>
+        <div className="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:border-gray-200">
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-50/50 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
+            <div className="relative">
+                <div className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-2">{label}</div>
+                <div className="text-2xl font-bold text-gray-900">{value ?? "—"}</div>
             </div>
         </div>
     );
