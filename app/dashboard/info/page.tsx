@@ -19,10 +19,11 @@ export default function Page() {
     const [currentStreak, setCurrentStreak] = useState<number>(0);
     const [longestStreak, setLongestStreak] = useState<number>(0);
     const [lastActivityDate, setLastActivityDate] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
+		try {
                 const user = firebaseAuth.currentUser;
 
                 if (user) {
@@ -64,8 +65,10 @@ export default function Page() {
                 } else {
                     console.log("User not found.");
                 }
-            } catch (error) {
+			} catch (error) {
                 console.error(error);
+			} finally {
+				setIsLoading(false);
             }
         };
 
@@ -114,128 +117,136 @@ export default function Page() {
         }
     };
 
-    return (
-        <div className="flex mx-auto justify-center flex-col md:flex-row">
-            <div className="px-4">
-                <h1 className="text-4xl font-bold text-center pb-6">Personal Info</h1>
-                <div className="p-8">
-                    <table className="table-auto border-2 border-gray-700">
-                        <tbody>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Name:</td>
-                                <td className="border px-4 py-2">{name}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Email:</td>
-                                <td className="border px-4 py-2">{email}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Subscription Type:</td>
-                                <td className="border px-4 py-2">{subscriptionType}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Subscription End Date:</td>
-                                <td className="border px-4 py-2">{subscriptionEndDate}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div className="px-4">
-                <h1 className="text-4xl font-bold text-center">User Settings</h1>
-                <h1 className="text-md text-center">Click the checkboxes to edit</h1>
-                <div className="p-8">
-                    <table className="table-auto border-2 border-gray-700">
-                        <tbody>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Play Multiple Choice Audio:</td>
-                                <td className="border px-4 py-2">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={playMCAudio} 
-                                        onChange={(e) => handleToggle("playMCAudio", e.target.checked)} 
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Play Speaking Audio:</td>
-                                <td className="border px-4 py-2">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={playSpeakingAudio} 
-                                        onChange={(e) => handleToggle("playSpeakingAudio", e.target.checked)} 
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Show Menu Audio Buttons:</td>
-                                <td className="border px-4 py-2">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={showMenuAudioButtons} 
-                                        onChange={(e) => handleToggle("showMenuAudioButtons", e.target.checked)} 
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Show Text:</td>
-                                <td className="border px-4 py-2">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={showText} 
-                                        onChange={(e) => handleToggle("showText", e.target.checked)} 
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Show Tips:</td>
-                                <td className="border px-4 py-2">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={showTips} 
-                                        onChange={(e) => handleToggle("showTips", e.target.checked)} 
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Use Voice Recognition:</td>
-                                <td className="border px-4 py-2">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={useVoiceRecognition} 
-                                        onChange={(e) => handleToggle("useVoiceRecognition", e.target.checked)} 
-                                    />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div className="px-4">
-                <h1 className="text-4xl font-bold text-center pb-6">Usage Info</h1>
-                <div className="p-8">
-                    <table className="table-auto border-2 border-gray-700">
-                        <tbody>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Current Streak:</td>
-                                <td className="border px-4 py-2">{currentStreak}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Longest Streak:</td>
-                                <td className="border px-4 py-2">{longestStreak}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Current Tokens:</td>
-                                <td className="border px-4 py-2">{currentTokens}</td>
-                            </tr>
-                            <tr>
-                                <td className="border px-4 py-2 bg-blue-500 text-white font-bold">Last Activity Date:</td>
-                                <td className="border px-4 py-2">{lastActivityDate}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    );
+	return (
+		<div className="min-h-screen">
+			<div className="max-w-7xl mx-auto px-6 py-10">
+				{/* Header */}
+				<div className="mb-8">
+					{isLoading ? (
+						<div className="animate-pulse">
+							<div className="h-8 w-64 bg-slate-200 rounded mb-3"></div>
+							<div className="h-4 w-96 bg-slate-200 rounded"></div>
+						</div>
+					) : (
+						<div>
+							<h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+								{name ? `${name}'s Info` : "Info"}
+							</h1>
+							<p className="mt-2 text-slate-600">Manage personal details, preferences, and usage.</p>
+						</div>
+					)}
+				</div>
+
+				{/* Content grid */}
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+					{/* Personal Info */}
+					<div className="lg:col-span-1 rounded-2xl border border-slate-200 bg-white shadow-sm">
+						<div className="px-5 pt-5 pb-3">
+							<h2 className="text-lg font-semibold text-slate-900">Personal Info</h2>
+							<p className="text-sm text-slate-600">User account and subscription</p>
+						</div>
+						<div className="px-5 pb-5">
+							{isLoading ? (
+								<div className="space-y-3 animate-pulse">
+									<div className="h-4 bg-slate-200 rounded w-3/4"></div>
+									<div className="h-4 bg-slate-200 rounded w-5/6"></div>
+									<div className="h-4 bg-slate-200 rounded w-2/3"></div>
+									<div className="h-4 bg-slate-200 rounded w-1/2"></div>
+								</div>
+							) : (
+								<dl className="divide-y divide-slate-200">
+									<div className="py-3 grid grid-cols-3 gap-4">
+										<dt className="text-sm font-medium text-slate-600">Name</dt>
+										<dd className="col-span-2 text-sm text-slate-900">{name}</dd>
+									</div>
+									<div className="py-3 grid grid-cols-3 gap-4">
+										<dt className="text-sm font-medium text-slate-600">Email</dt>
+										<dd className="col-span-2 text-sm text-slate-900 break-all">{email}</dd>
+									</div>
+									<div className="py-3 grid grid-cols-3 gap-4">
+										<dt className="text-sm font-medium text-slate-600">Subscription</dt>
+										<dd className="col-span-2 text-sm text-slate-900">{subscriptionType || "—"}</dd>
+									</div>
+									<div className="py-3 grid grid-cols-3 gap-4">
+										<dt className="text-sm font-medium text-slate-600">Ends on</dt>
+										<dd className="col-span-2 text-sm text-slate-900">{subscriptionEndDate || "—"}</dd>
+									</div>
+								</dl>
+							)}
+						</div>
+					</div>
+
+					{/* Settings */}
+					<div className="lg:col-span-1 rounded-2xl border border-slate-200 bg-white shadow-sm">
+						<div className="px-5 pt-5 pb-3">
+							<h2 className="text-lg font-semibold text-slate-900">User Settings</h2>
+							<p className="text-sm text-slate-600">Toggle preferences</p>
+						</div>
+						<div className="px-5 pb-5">
+							{[
+								{ key: "playMCAudio", label: "Play Multiple Choice Audio", value: playMCAudio, setter: (v: boolean) => handleToggle("playMCAudio", v) },
+								{ key: "playSpeakingAudio", label: "Play Speaking Audio", value: playSpeakingAudio, setter: (v: boolean) => handleToggle("playSpeakingAudio", v) },
+								{ key: "showMenuAudioButtons", label: "Show Menu Audio Buttons", value: showMenuAudioButtons, setter: (v: boolean) => handleToggle("showMenuAudioButtons", v) },
+								{ key: "showText", label: "Show Text", value: showText, setter: (v: boolean) => handleToggle("showText", v) },
+								{ key: "showTips", label: "Show Tips", value: showTips, setter: (v: boolean) => handleToggle("showTips", v) },
+								{ key: "useVoiceRecognition", label: "Use Voice Recognition", value: useVoiceRecognition, setter: (v: boolean) => handleToggle("useVoiceRecognition", v) },
+							].map((item) => (
+								<div key={item.key} className="flex items-center justify-between py-3">
+									<div className="text-sm font-medium text-slate-700">{item.label}</div>
+									<label className="relative inline-flex cursor-pointer items-center">
+										<input
+											type="checkbox"
+											className="sr-only peer"
+											checked={item.value}
+											onChange={(e) => item.setter(e.target.checked)}
+										/>
+										<div className="w-11 h-6 rounded-full bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 transition-colors peer-checked:bg-indigo-600 relative">
+											<span className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white border border-slate-300 shadow transition-all peer-checked:translate-x-5" />
+										</div>
+									</label>
+								</div>
+							))}
+						</div>
+					</div>
+
+					{/* Usage Info */}
+					<div className="lg:col-span-1 rounded-2xl border border-slate-200 bg-white shadow-sm">
+						<div className="px-5 pt-5 pb-3">
+							<h2 className="text-lg font-semibold text-slate-900">Usage Info</h2>
+							<p className="text-sm text-slate-600">Recent activity and progress</p>
+						</div>
+						<div className="px-5 pb-5">
+							{isLoading ? (
+								<div className="grid grid-cols-2 gap-4 animate-pulse">
+									<div className="h-16 bg-slate-200 rounded" />
+									<div className="h-16 bg-slate-200 rounded" />
+									<div className="h-16 bg-slate-200 rounded" />
+									<div className="h-16 bg-slate-200 rounded" />
+								</div>
+							) : (
+								<div className="grid grid-cols-2 gap-4">
+									<div className="rounded-xl border border-slate-200 p-4">
+										<div className="text-xs text-slate-500">Current Streak</div>
+										<div className="mt-1 text-2xl font-semibold text-slate-900">{currentStreak}</div>
+									</div>
+									<div className="rounded-xl border border-slate-200 p-4">
+										<div className="text-xs text-slate-500">Longest Streak</div>
+										<div className="mt-1 text-2xl font-semibold text-slate-900">{longestStreak}</div>
+									</div>
+									<div className="rounded-xl border border-slate-200 p-4">
+										<div className="text-xs text-slate-500">Current Tokens</div>
+										<div className="mt-1 text-2xl font-semibold text-slate-900">{currentTokens}</div>
+									</div>
+									<div className="rounded-xl border border-slate-200 p-4">
+										<div className="text-xs text-slate-500">Last Activity Date</div>
+										<div className="mt-1 text-base font-medium text-slate-900">{lastActivityDate || "—"}</div>
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
