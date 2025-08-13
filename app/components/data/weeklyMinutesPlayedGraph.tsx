@@ -9,17 +9,16 @@ interface ChartData {
 } 
 
 export default function WeeklyMinutesPlayedGraph({ history }: { history: Record<string, Record<string, any>> | null }) {
-    const labels = [
-        convertWeekdayToLabel(6), 
-        convertWeekdayToLabel(5), 
-        convertWeekdayToLabel(4), 
-        convertWeekdayToLabel(3), 
-        convertWeekdayToLabel(2), 
-        convertWeekdayToLabel(1), 
-        convertWeekdayToLabel(0), 
-    ];
-
     const chartData = useMemo<ChartData[]>(() => {
+        const labels = [
+            convertWeekdayToLabel(6), 
+            convertWeekdayToLabel(5), 
+            convertWeekdayToLabel(4), 
+            convertWeekdayToLabel(3), 
+            convertWeekdayToLabel(2), 
+            convertWeekdayToLabel(1), 
+            convertWeekdayToLabel(0), 
+        ];
         const base: ChartData[] = labels.map((label) => ({ day: label, count: 0 }));
         if (!history) return base;
 

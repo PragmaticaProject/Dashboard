@@ -5,6 +5,24 @@ import { useEffect, useState } from "react";
 import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 
+function formatDateTime(dateTimeString: string): string {
+    const [month, day, year, hour, minute] = dateTimeString.split(/[:\-]/);
+    const formattedDate = `${getMonthName(parseInt(month))} ${parseInt(day)}, ${year}`;
+    let formattedHour = parseInt(hour);
+    const amPm = formattedHour >= 12 ? 'PM' : 'AM';
+    formattedHour = formattedHour % 12 || 12;
+    const formattedTime = `${formattedHour}:${minute} ${amPm}`;
+    return `${formattedDate} - ${formattedTime}`;
+}
+
+function getMonthName(month: number): string {
+    const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    return months[month - 1];
+}
+
 export default function Page() {
     const [sessions, setSessions] = useState<{ [key: string]: string } | null>(null);
 
@@ -31,23 +49,7 @@ export default function Page() {
         fetchData();
     }, []);
 
-    const formatDateTime = (dateTimeString: string): string => {
-        const [month, day, year, hour, minute] = dateTimeString.split(/[:\-]/);
-        const formattedDate = `${getMonthName(parseInt(month))} ${parseInt(day)}, ${year}`;
-        let formattedHour = parseInt(hour);
-        const amPm = formattedHour >= 12 ? 'PM' : 'AM';
-        formattedHour = formattedHour % 12 || 12;
-        const formattedTime = `${formattedHour}:${minute} ${amPm}`;
-        return `${formattedDate} - ${formattedTime}`;
-    };
-
-    const getMonthName = (month: number): string => {
-        const months = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
-        return months[month - 1];
-    };
+    
 
     return (
         <div className="flex-col space-y-6">

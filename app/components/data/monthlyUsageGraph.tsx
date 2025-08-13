@@ -8,11 +8,11 @@ interface ChartData {
     count: number;
 }
 
-export default function MonthlyUsageGraph({ history }: { history: Record<string, Record<string, any>> | null }) {
-    const labels = ["Week 1", "Week 2", "Week 3", "Week 4"];
+const MONTH_LABELS = ["Week 1", "Week 2", "Week 3", "Week 4"];
 
+export default function MonthlyUsageGraph({ history }: { history: Record<string, Record<string, any>> | null }) {
     const chartData = useMemo<ChartData[]>(() => {
-        const base: ChartData[] = labels.map((label) => ({ date: label, count: 0 }));
+        const base: ChartData[] = MONTH_LABELS.map((label) => ({ date: label, count: 0 }));
         if (!history) return base;
 
         Object.keys(history).forEach((activityName: string) => {

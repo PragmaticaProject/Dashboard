@@ -6,6 +6,26 @@ import { ref, child, get } from "firebase/database";
 import { firebaseAuth, database } from "@/app/firebase";
 import Link from "next/link";
 
+function formatDateTime(dateTimeString: string): string {
+    const dateTimeArray = dateTimeString.split(' ');
+    const [month, day, year] = dateTimeArray[0].split(':');
+    const [hour, minute] = dateTimeArray[1].split(':');
+    const formattedDate = `${getMonthName(parseInt(month))} ${parseInt(day)}, ${year}`;
+    let formattedHour = parseInt(hour);
+    const amPm = formattedHour >= 12 ? 'PM' : 'AM';
+    formattedHour = formattedHour % 12 || 12;
+    const formattedTime = `${formattedHour}:${minute} ${amPm}`;
+    return `${formattedDate} at ${formattedTime}`;
+}
+
+function getMonthName(month: number): string {
+    const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    return months[month - 1];
+}
+
 export default function Page() {
     const sessionID = useSearchParams().get('sessionId');
     const [sessionStartDT, setSessionStartDT] = useState<string>();
@@ -49,27 +69,7 @@ export default function Page() {
         };
 
         fetchData();
-    }, []);
-
-    const formatDateTime = (dateTimeString: string): string => {
-        const dateTimeArray = dateTimeString.split(' ');
-        const [month, day, year] = dateTimeArray[0].split(':');
-        const [hour, minute, seconds] = dateTimeArray[1].split(':');
-        const formattedDate = `${getMonthName(parseInt(month))} ${parseInt(day)}, ${year}`;
-        let formattedHour = parseInt(hour);
-        const amPm = formattedHour >= 12 ? 'PM' : 'AM';
-        formattedHour = formattedHour % 12 || 12;
-        const formattedTime = `${formattedHour}:${minute} ${amPm}`;
-        return `${formattedDate} at ${formattedTime}`;
-    };
-    
-    const getMonthName = (month: number): string => {
-        const months = [
-            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-        ];
-        return months[month - 1];
-    };
+    }, [sessionID]);
 
     return (
         <div className="flex flex-col mx-auto space-y-8 max-w-lg">

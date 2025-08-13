@@ -8,19 +8,17 @@ interface ChartData {
     count: number;
 }
 
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export default function YearlyUsageGraph({ history }: { history: Record<string, Record<string, any>> | null }) {
-    const labels: string[] = [];
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
-    const today = new Date();
-    let currentMonth = today.getMonth();
-
-    for (let i = 11; i >= 0; i--) {
-        const monthIndex = (currentMonth - i + 12) % 12;
-        labels.push(monthNames[monthIndex]);
-    }
-
     const chartData = useMemo<ChartData[]>(() => {
+        const labels: string[] = [];
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        for (let i = 11; i >= 0; i--) {
+            const monthIndex = (currentMonth - i + 12) % 12;
+            labels.push(MONTH_NAMES[monthIndex]);
+        }
         const base: ChartData[] = labels.map((label) => ({ date: label, count: 0 }));
         if (!history) return base;
         Object.keys(history).forEach((activityName: string) => {

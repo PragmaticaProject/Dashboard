@@ -73,10 +73,10 @@ export default function Page() {
                     ) : (
                         <div>
                             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-                                {name ? `${name}'s Dashboard` : 'Dashboard'}
+                                {name ? (<>{name}&rsquo;s Dashboard</>) : 'Dashboard'}
                             </h1>
                             <p className="mt-2 text-slate-600">
-                                Navigate {name}'s analytics and assigned activities.
+                                Navigate {name}&rsquo;s analytics and assigned activities.
                             </p>
                         </div>
                     )}
